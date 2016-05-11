@@ -23,6 +23,7 @@ namespace WotStat
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = new ViewModel();
         }
     }
 }
