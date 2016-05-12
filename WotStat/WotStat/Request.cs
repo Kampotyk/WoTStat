@@ -1,25 +1,17 @@
-﻿using System.Collections.Generic;
-using System.Net.Http;
+﻿using System.Collections.Specialized;
+using System.Net;
+using System.Text;
 
 namespace WotStat
 {
     static class Request
     {
-        static async void PostRequest(string url, Dictionary<string, string> values) 
+        public static string PostRequest(string url, NameValueCollection values) 
         {
-            using (var client = new HttpClient())
+            using (var client = new WebClient())
             {
-                var content = new FormUrlEncodedContent(values);
-                var response = await client.PostAsync(url, content);
-                var responseString = await response.Content.ReadAsStringAsync();
-            }
-        }
-
-        static void GetRequest(string url)
-        {
-            using (var client = new HttpClient())
-            {
-                var responseString = client.GetStringAsync(url);
+                var response = client.UploadValues(url, values);
+                return Encoding.Default.GetString(response);
             }
         }
     }
