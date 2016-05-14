@@ -13,7 +13,7 @@ namespace WotStat
 
         public ViewModel()
         {
-            Tanks = GetTanks();
+            Tanks = LoadPlayerStats("Dr_John");
         }
 
         public ObservableCollection<TankModel> Tanks
@@ -35,11 +35,9 @@ namespace WotStat
                 handler(this, new PropertyChangedEventArgs(propertyName));
             }
         }
-        private ObservableCollection<TankModel> GetTanks()
+        private ObservableCollection<TankModel> LoadPlayerStats(string playerName)
         {
-            var accountId = GetAccountIdByName("Dr_John");
-            var tanks = GetAllTanks();
-            return new ObservableCollection<TankModel>();
+            return GetPlayersTanks(GetAccountIdByName(playerName), GetAllTanks());
         }
 
         private static string GetAccountIdByName(string name)
@@ -51,7 +49,7 @@ namespace WotStat
             requestParams.Add("search", name);
             requestParams.Add("limit", "1");
 
-            var jsonResult = Request.PostRequest(Constants.accountListUrl, requestParams);
+            var jsonResult = Request.PostRequest(Constants.AccountListUrl, requestParams);
             if(!String.IsNullOrEmpty(jsonResult))
             {
                 dynamic result = JsonConvert.DeserializeObject<dynamic>(jsonResult);
@@ -70,7 +68,7 @@ namespace WotStat
             requestParams.Add("language", "en");
             requestParams.Add("fields", "short_name_i18n, tank_id");
 
-            var jsonResult = Request.PostRequest(Constants.tanksListUrl, requestParams);
+            var jsonResult = Request.PostRequest(Constants.TanksListUrl, requestParams);
             if (!String.IsNullOrEmpty(jsonResult))
             {
                 dynamic result = JsonConvert.DeserializeObject<dynamic>(jsonResult);
@@ -79,10 +77,48 @@ namespace WotStat
                     dynamic value = tank.Value;
                     tanks.Add(value.tank_id.ToString(), value.short_name_i18n.ToString());
                 }
+                //Add missing FV 4202
+                if (!tanks.ContainsKey("55633"))
+                {
+                    tanks.Add("55633", "FV 4202(P)");
+                }
             }
-
             return tanks;
         }
 
+        private static ObservableCollection<TankModel> GetPlayersTanks(string accountId, Dictionary<string, string> tanks)
+        {
+            var playerTanks = new ObservableCollection<TankModel>();
+
+            var requestParams = new NameValueCollection();
+            requestParams.Add("application_id", "12845e99af9d4a7b3c734c0cbbb5ee12");
+            requestParams.Add("language", "en");
+            requestParams.Add("account_id", accountId);
+
+            var jsonResult = Request.PostRequest(Constants.PlayersTanksUrl, requestParams);
+            if (!String.IsNullOrEmpty(jsonResult))
+            {
+                dynamic result = JsonConvert.DeserializeObject<dynamic>(jsonResult);
+                foreach (dynamic player in result.data)
+                {
+                    foreach (dynamic tank in player.Value)
+                    {
+                        string tankName;
+                        if (tanks.TryGetValue(tank.tank_id.ToString(), out tankName))
+                        {
+                            var battles = tank.statistics.battles.Value;
+                            var wins = tank.statistics.wins.Value;
+                            var winRatio = Math.Round(((double)wins / battles * 100), 2);
+                            if(winRatio < 50.0)
+                            {
+                                var winsToDesiredPercent = battles - (long)Math.Ceiling((double)wins * 100 / Constants.DesiredWinPercent);
+                                playerTanks.Add(new TankModel(tankName, battles, winRatio, winsToDesiredPercent));
+                            }
+                        }
+                    }
+                }
+            }
+            return playerTanks;
+        }
     }
 }

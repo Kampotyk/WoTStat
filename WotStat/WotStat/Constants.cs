@@ -8,7 +8,9 @@ namespace WotStat
 {
     static class Constants
     {
-        public const string accountListUrl = "https://api.worldoftanks.ru/wot/account/list/";
-        public const string tanksListUrl = "https://api.worldoftanks.ru/wot/encyclopedia/tanks/"; 
+        public const int DesiredWinPercent = 50;
+        public const string AccountListUrl = "https://api.worldoftanks.ru/wot/account/list/";
+        public const string TanksListUrl = "https://api.worldoftanks.ru/wot/encyclopedia/tanks/";
+        public const string PlayersTanksUrl = "https://api.worldoftanks.ru/wot/account/tanks/";
     }
 }

@@ -8,9 +8,45 @@ namespace WotStat
 {
     class TankModel
     {
-        public string name { get; set;}
-        public int battleCount { get; set; }
-        public float winRatio { get; set; }
-        public int battlesTo50Percent { get; set; }
+        private string name;
+        private long battleCount;
+        private double winRatio;
+        private long winsToDesiredPercent;
+
+        public string Name
+        {
+            get
+            {
+                return name;
+            }
+        }
+        public long BattleCount
+        {
+            get
+            {
+                return battleCount;
+            }
+        }
+        public double WinRatio
+        {
+            get
+            {
+                return winRatio;
+            }
+        }
+        public long WinsToDesiredPercent
+        {
+            get
+            {
+                return winsToDesiredPercent;
+            }
+        }
+        public TankModel(string name, long battleCount, double winRatio, long winsToDesiredPercent)
+        {
+            this.name = name;
+            this.battleCount = battleCount;
+            this.winRatio = winRatio;
+            this.winsToDesiredPercent = winsToDesiredPercent;
+        }
     }
 }
