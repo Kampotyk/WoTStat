@@ -66,7 +66,7 @@ namespace WotStat
             var requestParams = new NameValueCollection();
             requestParams.Add("application_id", "12845e99af9d4a7b3c734c0cbbb5ee12");
             requestParams.Add("language", "en");
-            requestParams.Add("fields", "short_name_i18n, tank_id");
+            requestParams.Add("fields", "short_name, tank_id");
 
             var jsonResult = Request.PostRequest(Constants.TanksListUrl, requestParams);
             if (!String.IsNullOrEmpty(jsonResult))
@@ -75,12 +75,7 @@ namespace WotStat
                 foreach(dynamic tank in result.data)
                 {
                     dynamic value = tank.Value;
-                    tanks.Add(value.tank_id.ToString(), value.short_name_i18n.ToString());
-                }
-                //Add missing FV 4202
-                if (!tanks.ContainsKey("55633"))
-                {
-                    tanks.Add("55633", "FV 4202(P)");
+                    tanks.Add(value.tank_id.ToString(), value.short_name.ToString());
                 }
             }
             return tanks;
