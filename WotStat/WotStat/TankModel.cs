@@ -12,6 +12,7 @@ namespace WotStat
         private long battleCount;
         private double winRatio;
         private long winsToDesiredPercent;
+        private string details;
 
         public string Name
         {
@@ -41,12 +42,20 @@ namespace WotStat
                 return winsToDesiredPercent;
             }
         }
-        public TankModel(string name, long battleCount, double winRatio, long winsToDesiredPercent)
+        public string Details
+        {
+            get
+            {
+                return details;
+            }
+        }
+        public TankModel(string name, long battleCount, double winRatio, long winsToDesiredPercent, string details)
         {
             this.name = name;
             this.battleCount = battleCount;
             this.winRatio = winRatio;
             this.winsToDesiredPercent = winsToDesiredPercent;
+            this.details = details;
         }
     }
 }

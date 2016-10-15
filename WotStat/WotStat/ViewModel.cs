@@ -10,10 +10,11 @@ namespace WotStat
     class ViewModel : INotifyPropertyChanged
     {
         private ObservableCollection<TankModel> tanks;
+        private TankModel selectedTank;
 
-        public ViewModel()
+        public ViewModel(string accountName)
         {
-            Tanks = LoadPlayerStats("Dr_John");
+            Tanks = LoadPlayerStats(accountName);
         }
 
         public ObservableCollection<TankModel> Tanks
@@ -27,6 +28,20 @@ namespace WotStat
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public TankModel SelectedTank
+        {
+            get { return selectedTank; }
+            set
+            {
+                if (selectedTank != value)
+                {
+                    selectedTank = value;
+                    OnPropertyChanged("SelectedTank");
+                }
+            }
+        }
+
         private void OnPropertyChanged(string propertyName)
         {
             var handler = PropertyChanged;
@@ -107,7 +122,8 @@ namespace WotStat
                             if(winRatio < 50.0)
                             {
                                 var winsToDesiredPercent = battles - (long)Math.Ceiling((double)wins * 100 / Constants.DesiredWinPercent);
-                                playerTanks.Add(new TankModel(tankName, battles, winRatio, winsToDesiredPercent));
+                                var details = "Sample Text";
+                                playerTanks.Add(new TankModel(tankName, battles, winRatio, winsToDesiredPercent, details));
                             }
                         }
                     }
