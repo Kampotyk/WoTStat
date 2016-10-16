@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using WpfSampleBasicChart;
 
 namespace WotStat
 {
@@ -13,10 +15,13 @@ namespace WotStat
     public partial class MainWindow : Window
     {
         ViewModel tankViewModel = new ViewModel();
+        ObservableCollection<LineSeries> chartData = new ObservableCollection<LineSeries>();
 
         public MainWindow()
         {
             InitializeComponent();
+            base.DataContext = tankViewModel;
+            TankChart.ItemsSource = chartData;
         }
 
         private void OnSearch(object sender, RoutedEventArgs e)
@@ -60,8 +65,11 @@ namespace WotStat
 
         private void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            tankViewModel.DrawLineChart();
-            TankChart.ItemsSource = tankViewModel.ChartData;
+            if (chartData.Count == 1)
+            {
+                chartData.RemoveAt(0);
+            }
+            chartData.Add(tankViewModel.GetChartDataForSelectedTank());
         }
     }
 }

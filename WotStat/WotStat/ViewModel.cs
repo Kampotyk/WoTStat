@@ -11,7 +11,6 @@ namespace WotStat
     class ViewModel : INotifyPropertyChanged
     {
         private ObservableCollection<TankModel> tanks;
-        private ObservableCollection<LineSeries> chartData;
         private TankModel selectedTank;
 
         public ObservableCollection<TankModel> Tanks
@@ -21,16 +20,6 @@ namespace WotStat
             {
                 tanks = value;
                 OnPropertyChanged("Tanks");
-            }
-        }
-
-        public ObservableCollection<LineSeries> ChartData
-        {
-            get { return chartData; }
-            set
-            {
-                chartData = value;
-                OnPropertyChanged("ChartData");
             }
         }
 
@@ -54,24 +43,14 @@ namespace WotStat
             Tanks = GetPlayersTanks(GetAccountIdByName(playerName), GetAllTanks());
         }
 
-        public void DrawLineChart()
+        public LineSeries GetChartDataForSelectedTank()
         {
-            ChartData = GetChartDataForSelectedTank();
-        }
-
-        private ObservableCollection<LineSeries> GetChartDataForSelectedTank()
-        {
-            var chartData = new ObservableCollection<LineSeries>();
             var lineSeries = new LineSeries();
-
             for (int i = 0; i < SelectedTank.BattleCount; i++)
             {
                 lineSeries.ChartData.Add(new DataPoint() { Frequency = (double)i, Value = i * 2 + 5 });
             }
-
-            chartData.Add(lineSeries);
-
-            return chartData;
+            return lineSeries;
         }
 
         private void OnPropertyChanged(string propertyName)
