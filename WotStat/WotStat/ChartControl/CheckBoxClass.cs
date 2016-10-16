@@ -2,7 +2,7 @@
 
 namespace WpfSampleBasicChart.ChartControl
 {
-    public class CheckBoxClass: NotifierBase
+    public class CheckBoxClass : NotifierBase
     {
         private string m_Name = "";
         public string Name

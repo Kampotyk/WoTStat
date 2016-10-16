@@ -1,21 +1,18 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using Newtonsoft.Json;
+using WpfSampleBasicChart;
 
 namespace WotStat
 {
     class ViewModel : INotifyPropertyChanged
     {
         private ObservableCollection<TankModel> tanks;
+        private ObservableCollection<LineSeries> chartData;
         private TankModel selectedTank;
-
-        public ViewModel(string accountName)
-        {
-            Tanks = LoadPlayerStats(accountName);
-        }
 
         public ObservableCollection<TankModel> Tanks
         {
@@ -27,7 +24,15 @@ namespace WotStat
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public ObservableCollection<LineSeries> ChartData
+        {
+            get { return chartData; }
+            set
+            {
+                chartData = value;
+                OnPropertyChanged("ChartData");
+            }
+        }
 
         public TankModel SelectedTank
         {
@@ -42,6 +47,33 @@ namespace WotStat
             }
         }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void LoadPlayerStats(string playerName)
+        {
+            Tanks = GetPlayersTanks(GetAccountIdByName(playerName), GetAllTanks());
+        }
+
+        public void DrawLineChart()
+        {
+            ChartData = GetChartDataForSelectedTank();
+        }
+
+        private ObservableCollection<LineSeries> GetChartDataForSelectedTank()
+        {
+            var chartData = new ObservableCollection<LineSeries>();
+            var lineSeries = new LineSeries();
+
+            for (int i = 0; i < SelectedTank.BattleCount; i++)
+            {
+                lineSeries.ChartData.Add(new DataPoint() { Frequency = (double)i, Value = i * 2 + 5 });
+            }
+
+            chartData.Add(lineSeries);
+
+            return chartData;
+        }
+
         private void OnPropertyChanged(string propertyName)
         {
             var handler = PropertyChanged;
@@ -49,10 +81,6 @@ namespace WotStat
             {
                 handler(this, new PropertyChangedEventArgs(propertyName));
             }
-        }
-        private ObservableCollection<TankModel> LoadPlayerStats(string playerName)
-        {
-            return GetPlayersTanks(GetAccountIdByName(playerName), GetAllTanks());
         }
 
         private static string GetAccountIdByName(string name)
@@ -65,7 +93,7 @@ namespace WotStat
             requestParams.Add("limit", "1");
 
             var jsonResult = Request.PostRequest(Constants.AccountListUrl, requestParams);
-            if(!String.IsNullOrEmpty(jsonResult))
+            if (!String.IsNullOrEmpty(jsonResult))
             {
                 dynamic result = JsonConvert.DeserializeObject<dynamic>(jsonResult);
                 accountId = result.data.Last.account_id;
@@ -87,7 +115,7 @@ namespace WotStat
             if (!String.IsNullOrEmpty(jsonResult))
             {
                 dynamic result = JsonConvert.DeserializeObject<dynamic>(jsonResult);
-                foreach(dynamic tank in result.data)
+                foreach (dynamic tank in result.data)
                 {
                     dynamic value = tank.Value;
                     tanks.Add(value.tank_id.ToString(), value.short_name.ToString());
@@ -119,11 +147,10 @@ namespace WotStat
                             var battles = tank.statistics.battles.Value;
                             var wins = tank.statistics.wins.Value;
                             var winRatio = Math.Round(((double)wins / battles * 100), 2);
-                            if(winRatio < 50.0)
+                            if (winRatio < 50.0)
                             {
                                 var winsToDesiredPercent = battles - (long)Math.Ceiling((double)wins * 100 / Constants.DesiredWinPercent);
-                                var details = "Sample Text";
-                                playerTanks.Add(new TankModel(tankName, battles, winRatio, winsToDesiredPercent, details));
+                                playerTanks.Add(new TankModel(tankName, battles, winRatio, winsToDesiredPercent));
                             }
                         }
                     }

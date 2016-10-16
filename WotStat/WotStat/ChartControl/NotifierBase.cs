@@ -4,9 +4,8 @@ using System.Runtime.CompilerServices;
 
 namespace WpfSampleBasicChart
 {
-
     /// <summary>
-    ///     Implementation of <see cref="INotifyPropertyChanged" />  and Frameworkelement to simplify base drawing classes.
+    ///     Implementation of <see cref="INotifyPropertyChanged" /> and Frameworkelement to simplify base drawing classes.
     /// </summary>
     public abstract class NotifierBase : INotifyPropertyChanged
     {
@@ -16,15 +15,15 @@ namespace WpfSampleBasicChart
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
-        ///     Checks if a property already matches a desired value.  Sets the property and
-        ///     notifies listeners only when necessary.
+        ///     Checks if a property already matches a desired value.
+        ///     Sets the property and notifies listeners only when necessary.
         /// </summary>
         /// <typeparam name="T">Type of the property.</typeparam>
         /// <param name="storage">Reference to a property with both getter and setter.</param>
         /// <param name="value">Desired value for the property.</param>
         /// <param name="propertyName">
-        ///     Name of the property used to notify listeners.  This
-        ///     value is optional and can be provided automatically when invoked from compilers that
+        ///     Name of the property used to notify listeners.
+        ///     This value is optional and can be provided automatically when invoked from compilers that
         ///     support CallerMemberName.
         /// </param>
         /// <returns>
@@ -48,11 +47,10 @@ namespace WpfSampleBasicChart
         ///     Notifies listeners that a property value has changed.
         /// </summary>
         /// <param name="propertyName">
-        ///     Name of the property used to notify listeners.  This
-        ///     value is optional and can be provided automatically when invoked from compilers
-        ///     that support <see cref="CallerMemberNameAttribute" />.
+        ///     Name of the property used to notify listeners.
+        ///     This value is optional and can be provided automatically when invoked from compilers
+        ///     that support <see cref="CallerMemberNameAttribute"/>.
         /// </param>
-
         private void OnPropertyChanged<T>([CallerMemberName]string caller = null)
         {
             // make sure only to call this if the value actually changes
@@ -64,5 +62,3 @@ namespace WpfSampleBasicChart
         }
     }
 }
-
-

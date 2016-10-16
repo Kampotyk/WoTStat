@@ -24,19 +24,15 @@
                                              x:Name="CheckMark2"
                                              SnapsToDevicePixels="False" 
                                              Stroke="Black"
-                                             
                                              StrokeThickness="4"
                                              Data="M 0 0 L 8 8 M 0 8 L 8 0" />
                                         <Path Width="7" Height="7" 
                                              x:Name="CheckMark"
                                              SnapsToDevicePixels="False" 
                                              Stroke="White"
-                                             
                                              StrokeThickness="2"
                                              Data="M 0 0 L 7 7 M 0 7 L 7 0" />
                                     </Grid>
-
-
                                 </Border>
                             </BulletDecorator.Bullet>
                             <ContentPresenter Margin="4,0,0,0"
@@ -136,7 +132,6 @@
                         <ItemsControl.ItemContainerStyle>
                             <Style>
                                 <Setter Property="Canvas.Bottom" Value="{Binding ElementName=YAxis, Path=YLocation}"/>
-                                <!--<Setter Property="Canvas.Bottom" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}, Path=YLocation }"/>-->
                                 <Setter Property="Canvas.Left" Value="40"/>
                             </Style>
                         </ItemsControl.ItemContainerStyle>
@@ -161,4 +156,3 @@
         </ItemsControl>
     </Grid>
 </UserControl>
-

@@ -1,26 +1,27 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 
 namespace WpfSampleBasicChart
 {
-    public class LineSeries:NotifierBase
+    public class LineSeries : NotifierBase
     {
-        private ObservableCollection<DataPoint> m_MyData = new ObservableCollection<DataPoint>();
-        public ObservableCollection<DataPoint> MyData
+        private ObservableCollection<DataPoint> chartData = new ObservableCollection<DataPoint>();
+        public ObservableCollection<DataPoint> ChartData
         {
-            get { return m_MyData; }
+            get { return chartData; }
             set
             {
-                SetProperty(ref m_MyData, value);
+                SetProperty(ref chartData, value);
             }
         }
 
-        private string m_Name = "";
+        private string name = String.Empty;
         public string Name
         {
-            get { return m_Name; }
+            get { return name; }
             set
             {
-                SetProperty(ref m_Name, value);
+                SetProperty(ref name, value);
             }
         }
     }

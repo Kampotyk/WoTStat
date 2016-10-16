@@ -12,6 +12,8 @@ namespace WotStat
     /// </summary>
     public partial class MainWindow : Window
     {
+        ViewModel tankViewModel = new ViewModel();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -19,7 +21,8 @@ namespace WotStat
 
         private void OnSearch(object sender, RoutedEventArgs e)
         {
-            DataContext = new ViewModel(txtPlayerName.Text);
+            tankViewModel.LoadPlayerStats(txtPlayerName.Text);
+            base.DataContext = tankViewModel;
         }
 
         private void TextBoxValidation(object sender, TextCompositionEventArgs e)
@@ -53,6 +56,12 @@ namespace WotStat
         {
             Regex regex = new Regex("[^0-9a-zA-Z_]+");
             return !regex.IsMatch(text);
+        }
+
+        private void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            tankViewModel.DrawLineChart();
+            TankChart.ItemsSource = tankViewModel.ChartData;
         }
     }
 }

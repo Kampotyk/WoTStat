@@ -1,6 +1,6 @@
 ﻿namespace WpfSampleBasicChart
 {
-    public class DataPoint:NotifierBase
+    public class DataPoint : NotifierBase
     {
         private double m_Frequency = new double();
         public double Frequency

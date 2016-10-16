@@ -3,38 +3,37 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:WpfSampleBasicChart"
         xmlns:Chart="clr-namespace:WpfSampleBasicChart.ChartControl"
-        Title="MainWindow" Height="800" Width="1000" ResizeMode="NoResize">
-    <Grid>
+        Title="MainWindow" Height="600" Width="1000" ResizeMode="NoResize">
+    <Grid Margin="0,0,0,0">
         <TextBox x:Name="txtPlayerName" HorizontalAlignment="Center" Height="23"
-                 Margin="0,31,0,0" VerticalAlignment="Top" Width="120" ToolTip="Player Nickname"
+                 Margin="0,37,0,0" VerticalAlignment="Top" Width="120" ToolTip="Player Nickname"
                  MaxLines="1" MaxLength="24" PreviewTextInput="TextBoxValidation"
                  DataObject.Pasting="TextBoxPasting" TextChanged="OnTextChanged"/>
-        <Button x:Name="btnSearch" Content="Search" HorizontalAlignment="Right" Margin="0,32,340,0"
-                VerticalAlignment="Top" Width="74" IsDefault="True" Click="OnSearch" IsEnabled="False"/>
-        <DataGrid x:Name="grdStats" HorizontalAlignment="Left" Margin="0,80,0,0" Width="990"
+        <Button x:Name="btnSearch" Content="Search" HorizontalAlignment="Right" Margin="0,38,344,0"
+                VerticalAlignment="Top" Width="74" IsDefault="True" Click="OnSearch" IsEnabled="False" Height="22"/>
+        <DataGrid x:Name="grdStats" HorizontalAlignment="Left" Margin="0,80,0,10" Width="346"
                   AutoGenerateColumns="False" ItemsSource="{Binding Tanks}"
-                  SelectedItem="{Binding SelectedTank}">
+                  SelectedItem="{Binding SelectedTank}" SelectionMode="Single" SelectionChanged="OnSelectionChanged">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Tank Name" Binding="{Binding Name}"/>
                 <DataGridTextColumn Header="Battles" Binding="{Binding BattleCount}"/>
                 <DataGridTextColumn Header="Wins" Binding="{Binding WinRatio}"/>
                 <DataGridTextColumn Header="Wins To 50%" Binding="{Binding WinsToDesiredPercent}"/>
             </DataGrid.Columns>
-            <DataGrid.RowDetailsTemplate>
-                <DataTemplate>
-                    <Chart:BasicChart x:Name="MyChart" Height="350" Width="500" 
-                       DataCollectionName="MyData"   
-                       DisplayMemberLabels="Frequency"
-                       DisplayMemberValues="Value"
-                       SkipLabels="3"
-                       StartSkipAt="1"
-                       ShowGraphPoints="True"
-                       ChartTitle="Calcualted values" YLabel="Sound Transmission [dB]" 
-                       XLabel="Freqency [Hz]" YMax="0" YMin="0" DoubleToString="N0"
-                          XMin="1" XMax="24">
-                    </Chart:BasicChart>
-                </DataTemplate>
-            </DataGrid.RowDetailsTemplate>
         </DataGrid>
+        <Chart:BasicChart x:Name="TankChart"
+                        Height="Auto" Width="Auto"
+                        DataCollectionName="ChartData"
+                        DisplayMemberLabels="Frequency"
+                        DisplayMemberValues="Value"
+                        SkipLabels="3"
+                        StartSkipAt="1"
+                        ShowGraphPoints="True"
+                        ChartTitle="Battle estimate"
+                        YLabel="Session win ratio [%]"
+                        XLabel="Battle count [N]"
+                        YMax="0" YMin="0"
+                        DoubleToString="N0"
+                        XMin="1" XMax="24" Margin="376,112,24,114"/>
     </Grid>
 </Window>

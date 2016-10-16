@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace WotStat
+﻿namespace WotStat
 {
     class TankModel
     {
@@ -12,50 +6,30 @@ namespace WotStat
         private long battleCount;
         private double winRatio;
         private long winsToDesiredPercent;
-        private string details;
 
         public string Name
         {
-            get
-            {
-                return name;
-            }
+            get { return name; }
         }
         public long BattleCount
         {
-            get
-            {
-                return battleCount;
-            }
+            get { return battleCount; }
         }
         public double WinRatio
         {
-            get
-            {
-                return winRatio;
-            }
+            get { return winRatio; }
         }
         public long WinsToDesiredPercent
         {
-            get
-            {
-                return winsToDesiredPercent;
-            }
+            get { return winsToDesiredPercent; }
         }
-        public string Details
-        {
-            get
-            {
-                return details;
-            }
-        }
-        public TankModel(string name, long battleCount, double winRatio, long winsToDesiredPercent, string details)
+
+        public TankModel(string name, long battleCount, double winRatio, long winsToDesiredPercent)
         {
             this.name = name;
             this.battleCount = battleCount;
             this.winRatio = winRatio;
             this.winsToDesiredPercent = winsToDesiredPercent;
-            this.details = details;
         }
     }
 }
