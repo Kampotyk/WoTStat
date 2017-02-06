@@ -29,8 +29,8 @@
                             <DVC:LineSeries
                                 Title="Stats"
                                 ItemsSource="{Binding Path=DetailItems}"
-                                IndependentValueBinding="{Binding Path=Key}"
-                                DependentValueBinding="{Binding Path=Value}">
+                                DependentValueBinding="{Binding Path=Key}"
+                                IndependentValueBinding="{Binding Path=Value}">
                             </DVC:LineSeries>
                         </DVC:Chart.Series>
                     </DVC:Chart>
