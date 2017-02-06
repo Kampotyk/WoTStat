@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using Newtonsoft.Json;
-using WpfSampleBasicChart;
+using System.Linq;
 
 namespace WotStat
 {
@@ -43,14 +43,17 @@ namespace WotStat
             Tanks = GetPlayersTanks(GetAccountIdByName(playerName), GetAllTanks());
         }
 
-        public LineSeries GetChartDataForSelectedTank()
+        public ObservableCollection<KeyValuePair<long, double>> GetChartDataForSelectedTank()
         {
-            var lineSeries = new LineSeries();
-            for (int i = 0; i < SelectedTank.BattleCount; i++)
+            var chartData = new List<KeyValuePair<long, double>>();
+            for (double sessionRatio = Constants.DesiredWinPercent + Constants.GraphStep;
+                 sessionRatio < Constants.MaxWinPercent;
+                 sessionRatio += Constants.GraphStep)
             {
-                lineSeries.ChartData.Add(new DataPoint() { Frequency = (double)i, Value = i * 2 + 5 });
+                var battleCountToDesiredRatio = Computer.GetBattleCountToDesiredRatio(SelectedTank.BattleCount, SelectedTank.WinCount, Constants.DesiredWinPercent, sessionRatio);
+                chartData.Add(new KeyValuePair<long, double>(battleCountToDesiredRatio, sessionRatio));
             }
-            return lineSeries;
+            return new ObservableCollection<KeyValuePair<long,double>>(chartData.OrderByDescending(pair => pair.Value));
         }
 
         private void OnPropertyChanged(string propertyName)
@@ -125,11 +128,10 @@ namespace WotStat
                         {
                             var battles = tank.statistics.battles.Value;
                             var wins = tank.statistics.wins.Value;
-                            var winRatio = Math.Round(((double)wins / battles * 100), 2);
-                            if (winRatio < 50.0)
+                            var tankModel = new TankModel(tankName, battles, wins);
+                            if (tankModel.WinsToDesiredPercent > 0)
                             {
-                                var winsToDesiredPercent = battles - (long)Math.Ceiling((double)wins * 100 / Constants.DesiredWinPercent);
-                                playerTanks.Add(new TankModel(tankName, battles, winRatio, winsToDesiredPercent));
+                                playerTanks.Add(tankModel);
                             }
                         }
                     }

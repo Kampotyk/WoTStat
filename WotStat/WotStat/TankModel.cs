@@ -4,6 +4,7 @@
     {
         private string name;
         private long battleCount;
+        private long winCount;
         private double winRatio;
         private long winsToDesiredPercent;
 
@@ -15,6 +16,10 @@
         {
             get { return battleCount; }
         }
+        public long WinCount
+        {
+            get { return winCount; }
+        }
         public double WinRatio
         {
             get { return winRatio; }
@@ -24,12 +29,15 @@
             get { return winsToDesiredPercent; }
         }
 
-        public TankModel(string name, long battleCount, double winRatio, long winsToDesiredPercent)
+        public TankModel(string name, long battleCount, long winCount)
         {
             this.name = name;
             this.battleCount = battleCount;
-            this.winRatio = winRatio;
-            this.winsToDesiredPercent = winsToDesiredPercent;
+            this.winCount = winCount;
+            this.winRatio = Computer.GetWinRatio(battleCount, winCount);
+            this.winsToDesiredPercent = winRatio < Constants.DesiredWinPercent
+                                        ? Computer.GetBattleCountToDesiredRatio(battleCount, winCount, Constants.DesiredWinPercent, Constants.MaxWinPercent)
+                                        : 0;
         }
     }
 }

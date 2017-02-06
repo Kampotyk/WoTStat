@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.DataVisualization.Charting;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
-using WpfSampleBasicChart;
 
 namespace WotStat
 {
@@ -15,13 +16,13 @@ namespace WotStat
     public partial class MainWindow : Window
     {
         ViewModel tankViewModel = new ViewModel();
-        ObservableCollection<LineSeries> chartData = new ObservableCollection<LineSeries>();
+        ObservableCollection<KeyValuePair<long, double>> DetailItems { get; set; }
 
         public MainWindow()
         {
             InitializeComponent();
             base.DataContext = tankViewModel;
-            TankChart.ItemsSource = chartData;
+            grdStats.RowDetailsVisibilityChanged += new EventHandler<DataGridRowDetailsEventArgs>(RowDetailsVisibilityChanged);
         }
 
         private void OnSearch(object sender, RoutedEventArgs e)
@@ -65,11 +66,13 @@ namespace WotStat
 
         private void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (chartData.Count == 1)
-            {
-                chartData.RemoveAt(0);
-            }
-            chartData.Add(tankViewModel.GetChartDataForSelectedTank());
+        }
+
+
+        private void RowDetailsVisibilityChanged(object sender, DataGridRowDetailsEventArgs e)
+        {
+            Chart mcChart = e.DetailsElement as Chart;
+            ((LineSeries)mcChart.Series[0]).ItemsSource = tankViewModel.GetChartDataForSelectedTank();
         }
     }
 }
