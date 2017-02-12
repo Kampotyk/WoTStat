@@ -13,21 +13,25 @@
                 VerticalAlignment="Top" Width="74" IsDefault="True" Click="OnSearch" IsEnabled="False" Height="22"/>
         <DataGrid x:Name="grdStats" Margin="0,80,0,0"
                   AutoGenerateColumns="False" ItemsSource="{Binding Tanks}"
-                  SelectedItem="{Binding SelectedTank}" SelectionMode="Single" SelectionChanged="OnSelectionChanged" HorizontalAlignment="Left" Width="994">
+                  SelectedItem="{Binding SelectedTank}" SelectionMode="Single" HorizontalAlignment="Left" Width="994">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Tank Name" Binding="{Binding Name}"/>
                 <DataGridTextColumn Header="Battles" Binding="{Binding BattleCount}"/>
                 <DataGridTextColumn Header="Wins" Binding="{Binding WinRatio}"/>
                 <DataGridTextColumn Header="Wins To 50%" Binding="{Binding WinsToDesiredPercent}"/>
+                <DataGridTextColumn Header="Badge" Binding="{Binding Badge}"/>
             </DataGrid.Columns>
             <DataGrid.RowDetailsTemplate>
                 <DataTemplate>
                     <DVC:Chart Canvas.Top="80" Canvas.Left="10" Name="mcChart"
                         Width="400" Height="250"
                         Background="LightSteelBlue">
+                        <DVC:Chart.Axes>
+                            <DVC:LinearAxis Orientation="Y" Title="Battles"/>
+                            <DVC:LinearAxis Orientation="X" Title="Win Ratio"/>
+                        </DVC:Chart.Axes>
                         <DVC:Chart.Series>
                             <DVC:LineSeries
-                                Title="Stats"
                                 ItemsSource="{Binding Path=DetailItems}"
                                 DependentValueBinding="{Binding Path=Key}"
                                 IndependentValueBinding="{Binding Path=Value}">

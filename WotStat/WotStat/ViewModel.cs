@@ -128,7 +128,8 @@ namespace WotStat
                         {
                             var battles = tank.statistics.battles.Value;
                             var wins = tank.statistics.wins.Value;
-                            var tankModel = new TankModel(tankName, battles, wins);
+                            var badge = (Constants.Badge)tank.mark_of_mastery.Value;
+                            var tankModel = new TankModel(tankName, battles, wins, badge);
                             if (tankModel.WinsToDesiredPercent > 0)
                             {
                                 playerTanks.Add(tankModel);

@@ -64,15 +64,12 @@ namespace WotStat
             return !regex.IsMatch(text);
         }
 
-        private void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-        }
-
-
         private void RowDetailsVisibilityChanged(object sender, DataGridRowDetailsEventArgs e)
         {
-            Chart mcChart = e.DetailsElement as Chart;
-            ((LineSeries)mcChart.Series[0]).ItemsSource = tankViewModel.GetChartDataForSelectedTank();
+            var mcChart = e.DetailsElement as Chart;
+            var lineSeries = (LineSeries)mcChart.Series[0];
+            lineSeries.ItemsSource = tankViewModel.GetChartDataForSelectedTank();
+            lineSeries.Title = "Estimate";
         }
     }
 }
