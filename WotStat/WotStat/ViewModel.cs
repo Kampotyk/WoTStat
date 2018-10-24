@@ -36,6 +36,8 @@ namespace WotStat
             }
         }
 
+        public TankModel PrevSelectedTank { get; set;}
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public void LoadPlayerStats(string playerName)

@@ -13,7 +13,14 @@
                 VerticalAlignment="Top" Width="74" IsDefault="True" Click="OnSearch" IsEnabled="False" Height="22"/>
         <DataGrid x:Name="grdStats" Margin="0,80,0,0"
                   AutoGenerateColumns="False" ItemsSource="{Binding Tanks}"
-                  SelectedItem="{Binding SelectedTank}" SelectionMode="Single" HorizontalAlignment="Left" Width="994">
+                  SelectedItem="{Binding SelectedTank}" SelectionMode="Single" SelectionUnit="FullRow"
+                  HorizontalAlignment="Left" Width="994"
+                  IsReadOnly="True" CanUserAddRows="False" RowDetailsVisibilityMode="Collapsed">
+            <DataGrid.ItemContainerStyle>
+                <Style TargetType="DataGridRow">
+                    <EventSetter Event="MouseUp" Handler="DataGridMouseLeftButtonUp"/>
+                </Style>
+            </DataGrid.ItemContainerStyle>
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Tank Name" Binding="{Binding Name}"/>
                 <DataGridTextColumn Header="Battles" Binding="{Binding BattleCount}"/>

@@ -71,5 +71,31 @@ namespace WotStat
             lineSeries.ItemsSource = tankViewModel.GetChartDataForSelectedTank();
             lineSeries.Title = "Estimate";
         }
+
+        private void DataGridMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (e.Source.GetType().Equals(typeof(DataGridCellsPresenter)))
+            {
+                DataGridRow row = sender as DataGridRow;
+                object dataitem = row.DataContext;
+                Visibility visibility = this.grdStats.GetDetailsVisibilityForItem(dataitem);
+
+                if (tankViewModel.PrevSelectedTank != null && this.grdStats.GetDetailsVisibilityForItem(tankViewModel.PrevSelectedTank) == Visibility.Visible)
+                {
+                    this.grdStats.SetDetailsVisibilityForItem(tankViewModel.PrevSelectedTank, Visibility.Collapsed);
+                }
+
+                if (row.IsSelected && visibility == System.Windows.Visibility.Visible)
+                {
+                    this.grdStats.SetDetailsVisibilityForItem(dataitem, System.Windows.Visibility.Collapsed);
+                }
+                else
+                {
+                    this.grdStats.SetDetailsVisibilityForItem(dataitem, System.Windows.Visibility.Visible);
+                }
+
+                tankViewModel.PrevSelectedTank = tankViewModel.SelectedTank;
+            }
+        }
     }
 }
