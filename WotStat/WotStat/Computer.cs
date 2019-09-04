@@ -2,7 +2,7 @@
 
 namespace WotStat
 {
-    class Computer
+    internal class Computer
     {
         public static double GetWinRatio(long battleCount, long winCount)
         {

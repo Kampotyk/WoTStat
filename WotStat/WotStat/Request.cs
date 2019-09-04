@@ -4,7 +4,7 @@ using System.Text;
 
 namespace WotStat
 {
-    static class Request
+    internal static class Request
     {
         public static string PostRequest(string url, NameValueCollection values) 
         {
