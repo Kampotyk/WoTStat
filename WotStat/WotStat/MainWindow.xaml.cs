@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -16,19 +14,18 @@ namespace WotStat
     public partial class MainWindow : Window
     {
         ViewModel tankViewModel = new ViewModel();
-        ObservableCollection<KeyValuePair<long, double>> DetailItems { get; set; }
 
         public MainWindow()
         {
             InitializeComponent();
-            base.DataContext = tankViewModel;
-            grdStats.RowDetailsVisibilityChanged += new EventHandler<DataGridRowDetailsEventArgs>(RowDetailsVisibilityChanged);
+            DataContext = tankViewModel;
+            grdStats.RowDetailsVisibilityChanged += RowDetailsVisibilityChanged;
         }
 
         private void OnSearch(object sender, RoutedEventArgs e)
         {
             tankViewModel.LoadPlayerStats(txtPlayerName.Text);
-            base.DataContext = tankViewModel;
+            DataContext = tankViewModel;
         }
 
         private void TextBoxValidation(object sender, TextCompositionEventArgs e)
@@ -52,46 +49,52 @@ namespace WotStat
             }
         }
 
-        private void OnTextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        private void OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            TextBox box = sender as TextBox;
-            this.btnSearch.IsEnabled = box.Text.Length >= 3;
+            if (sender is TextBox box)
+            {
+                btnSearch.IsEnabled = box.Text.Length >= 3;
+            }
         }
 
-        private bool IsTextAllowed(string text)
+        private static bool IsTextAllowed(string text)
         {
-            Regex regex = new Regex("[^0-9a-zA-Z_]+");
+            var regex = new Regex("[^0-9a-zA-Z_]+");
             return !regex.IsMatch(text);
         }
 
         private void RowDetailsVisibilityChanged(object sender, DataGridRowDetailsEventArgs e)
         {
-            var mcChart = e.DetailsElement as Chart;
-            var lineSeries = (LineSeries)mcChart.Series[0];
-            lineSeries.ItemsSource = tankViewModel.GetChartDataForSelectedTank();
-            lineSeries.Title = "Estimate";
+            if (e.DetailsElement is Chart mcChart && mcChart.IsVisible)
+            {
+                var lineSeries = (LineSeries)mcChart.Series[0];
+                lineSeries.ItemsSource = tankViewModel.GetChartDataForSelectedTank();
+                lineSeries.Title = "Estimate";
+            }
         }
 
-        private void DataGridMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void DataGridMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if (e.Source.GetType().Equals(typeof(DataGridCellsPresenter)))
+            if (e.Source.GetType() == typeof(DataGridCellsPresenter))
             {
-                DataGridRow row = sender as DataGridRow;
-                object dataitem = row.DataContext;
-                Visibility visibility = this.grdStats.GetDetailsVisibilityForItem(dataitem);
+                if (sender is DataGridRow row)
+                {
+                    var dataitem = row.DataContext;
+                    var visibility = grdStats.GetDetailsVisibilityForItem(dataitem);
 
-                if (tankViewModel.PrevSelectedTank != null && this.grdStats.GetDetailsVisibilityForItem(tankViewModel.PrevSelectedTank) == Visibility.Visible)
-                {
-                    this.grdStats.SetDetailsVisibilityForItem(tankViewModel.PrevSelectedTank, Visibility.Collapsed);
-                }
+                    if (tankViewModel.PrevSelectedTank != null && grdStats.GetDetailsVisibilityForItem(tankViewModel.PrevSelectedTank) == Visibility.Visible)
+                    {
+                        grdStats.SetDetailsVisibilityForItem(tankViewModel.PrevSelectedTank, Visibility.Collapsed);
+                    }
 
-                if (row.IsSelected && visibility == System.Windows.Visibility.Visible)
-                {
-                    this.grdStats.SetDetailsVisibilityForItem(dataitem, System.Windows.Visibility.Collapsed);
-                }
-                else
-                {
-                    this.grdStats.SetDetailsVisibilityForItem(dataitem, System.Windows.Visibility.Visible);
+                    if (row.IsSelected && visibility == Visibility.Visible)
+                    {
+                        grdStats.SetDetailsVisibilityForItem(dataitem, Visibility.Collapsed);
+                    }
+                    else
+                    {
+                        grdStats.SetDetailsVisibilityForItem(dataitem, Visibility.Visible);
+                    }
                 }
 
                 tankViewModel.PrevSelectedTank = tankViewModel.SelectedTank;

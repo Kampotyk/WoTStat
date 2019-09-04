@@ -135,8 +135,7 @@ namespace WotStat
             {
                 foreach (dynamic tank in player.Value)
                 {
-                    string tankName;
-                    if (tanks.TryGetValue(tank.tank_id.ToString(), out tankName))
+                    if (tanks.TryGetValue(tank.tank_id.ToString(), out string tankName))
                     {
                         var battles = tank.statistics.battles.Value;
                         var wins = tank.statistics.wins.Value;
