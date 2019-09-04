@@ -155,3 +155,5 @@ $RECYCLE.BIN/
 # Mac desktop service store files
 .DS_Store
 /WotStat/packages
+/.vs
+/WotStat/.vs/WotStat/v16/Server/sqlite3
