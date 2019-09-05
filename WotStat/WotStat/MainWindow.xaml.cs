@@ -22,10 +22,16 @@ namespace WotStat
             grdStats.RowDetailsVisibilityChanged += RowDetailsVisibilityChanged;
         }
 
-        private void OnSearch(object sender, RoutedEventArgs e)
+        private async void OnSearch(object sender, RoutedEventArgs e)
         {
-            tankViewModel.LoadPlayerStats(txtPlayerName.Text);
+            btnSearch.IsEnabled = false;
+            btnSearch.Content = "Search...";
+
+            await tankViewModel.LoadPlayerStats(txtPlayerName.Text);
             DataContext = tankViewModel;
+
+            btnSearch.IsEnabled = true;
+            btnSearch.Content = "Search";
         }
 
         private void TextBoxValidation(object sender, TextCompositionEventArgs e)

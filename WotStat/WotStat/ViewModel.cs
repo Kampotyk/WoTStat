@@ -1,10 +1,11 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace WotStat
 {
@@ -40,9 +41,10 @@ namespace WotStat
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public void LoadPlayerStats(string playerName)
+        public async Task<bool> LoadPlayerStats(string playerName)
         {
-            Tanks = GetPlayersTanks(GetAccountIdByName(playerName), GetAllTanks());
+            Tanks = await Task.Factory.StartNew(() => GetPlayersTanks(GetAccountIdByName(playerName), GetAllTanks()));
+            return true;
         }
 
         public ObservableCollection<KeyValuePair<long, double>> GetChartDataForSelectedTank()
