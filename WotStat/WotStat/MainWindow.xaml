@@ -1,14 +1,14 @@
-﻿<Window x:Class="WotStat.MainWindow"
+﻿<Window x:Name="WotStats" x:Class="WotStat.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:DVC="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
-        Title="MainWindow" Height="600" Width="1000" ResizeMode="NoResize">
+        Title="WoT Stats" Height="600" Width="1000" ResizeMode="NoResize" Icon="Resourses/wot.jpg">
     <Grid Margin="0,0,0,0">
-        <TextBox x:Name="txtPlayerName" HorizontalAlignment="Center" Height="23"
-                 Margin="0,37,0,0" VerticalAlignment="Top" Width="120" ToolTip="Player Nickname"
+        <TextBox x:Name="txtPlayerName" HorizontalAlignment="Left" Height="23"
+                 Margin="408,38,0,0" VerticalAlignment="Top" Width="120" ToolTip="Player Nickname"
                  MaxLines="1" MaxLength="24" PreviewTextInput="TextBoxValidation"
                  DataObject.Pasting="TextBoxPasting" TextChanged="OnTextChanged"/>
-        <Button x:Name="btnSearch" Content="Search" HorizontalAlignment="Left" Margin="576,38,0,0"
+        <Button x:Name="btnSearch" Content="Search" HorizontalAlignment="Left" Margin="545,38,0,0"
                 VerticalAlignment="Top" Width="74" IsDefault="True" Click="OnSearch" IsEnabled="False" Height="22"/>
         <DataGrid x:Name="grdStats" Margin="0,80,0,0"
                   AutoGenerateColumns="False" ItemsSource="{Binding Tanks}"
@@ -21,16 +21,16 @@
                 </Style>
             </DataGrid.ItemContainerStyle>
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Tank Name" Binding="{Binding Name}"/>
-                <DataGridTextColumn Header="Battles" Binding="{Binding BattleCount}"/>
-                <DataGridTextColumn Header="Wins" Binding="{Binding WinRatio}"/>
-                <DataGridTextColumn Header="Wins To 50%" Binding="{Binding WinsToDesiredPercent}"/>
-                <DataGridTextColumn Header="Badge" Binding="{Binding Badge}"/>
+                <DataGridTextColumn Header="Tank Name" Binding="{Binding Name}" Width="0.2*"/>
+                <DataGridTextColumn Header="Battles" Binding="{Binding BattleCount}" Width="0.2*"/>
+                <DataGridTextColumn Header="Wins" Binding="{Binding WinRatio}" Width="0.2*"/>
+                <DataGridTextColumn Header="Wins To 50%" Binding="{Binding WinsToDesiredPercent}" Width="0.2*"/>
+                <DataGridTextColumn Header="Badge" Binding="{Binding Badge}" Width="0.2*"/>
             </DataGrid.Columns>
             <DataGrid.RowDetailsTemplate>
                 <DataTemplate>
                     <DVC:Chart Name="mcChart"
-                        Width="400" Height="250"
+                        Width="700" Height="300"
                         Background="LightSteelBlue">
                         <DVC:Chart.Axes>
                             <DVC:LinearAxis Orientation="Y" Title="Battles"/>
