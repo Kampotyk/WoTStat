@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.852
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WotStat", "WotStat\WotStat.csproj", "{D2BAEACB-C488-48CE-92B1-5BDE66B47960}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WotStatApi", "WotStatApi\WotStatApi.csproj", "{8C7F7205-D632-4D2A-A47F-76B0EF931D08}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,8 +17,15 @@ Global
 		{D2BAEACB-C488-48CE-92B1-5BDE66B47960}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D2BAEACB-C488-48CE-92B1-5BDE66B47960}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D2BAEACB-C488-48CE-92B1-5BDE66B47960}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C7F7205-D632-4D2A-A47F-76B0EF931D08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C7F7205-D632-4D2A-A47F-76B0EF931D08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C7F7205-D632-4D2A-A47F-76B0EF931D08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C7F7205-D632-4D2A-A47F-76B0EF931D08}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4C270BA7-6237-497D-9047-5C70FD95E2BD}
 	EndGlobalSection
 EndGlobal
