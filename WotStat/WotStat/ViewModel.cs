@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using WotStat.Extensions;
 
 namespace WotStat
 {
@@ -142,7 +143,7 @@ namespace WotStat
                         var battles = tank.statistics.battles.Value;
                         var wins = tank.statistics.wins.Value;
                         var badge = (Constants.Badge)tank.mark_of_mastery.Value;
-                        var tankModel = new TankModel(tankName, battles, wins, badge);
+                        var tankModel = TankExtensions.Create(tankName, battles, wins, badge);
                         if (tankModel.WinsToDesiredPercent > 0)
                         {
                             playerTanks.Add(tankModel);
