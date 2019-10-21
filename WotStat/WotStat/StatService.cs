@@ -98,14 +98,17 @@ namespace WotStat
             return playerTanks;
         }
 
-        public static ObservableCollection<KeyValuePair<long, double>> GetChartDataForSelectedTank(TankModel tank)
+        public static ObservableCollection<KeyValuePair<long, double>> GetChartDataByBattlesInfo(TankModel tank)
+            => GetChartDataByBattlesInfo(tank.BattleCount, tank.WinCount);
+
+        public static ObservableCollection<KeyValuePair<long, double>> GetChartDataByBattlesInfo(long battleCount, long winCount)
         {
             var chartData = new List<KeyValuePair<long, double>>();
             for (var sessionRatio = Constants.DesiredWinPercent + Constants.GraphStep;
                  sessionRatio < Constants.MaxWinPercent;
                  sessionRatio += Constants.GraphStep)
             {
-                var battleCountToDesiredRatio = Computer.GetBattleCountToDesiredRatio(tank.BattleCount, tank.WinCount, Constants.DesiredWinPercent, sessionRatio);
+                var battleCountToDesiredRatio = Computer.GetBattleCountToDesiredRatio(battleCount, winCount, Constants.DesiredWinPercent, sessionRatio);
                 chartData.Add(new KeyValuePair<long, double>(battleCountToDesiredRatio, sessionRatio));
             }
             return new ObservableCollection<KeyValuePair<long, double>>(chartData.OrderByDescending(pair => pair.Value));

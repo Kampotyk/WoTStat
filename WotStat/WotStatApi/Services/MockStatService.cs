@@ -2,12 +2,18 @@
 using System.Threading.Tasks;
 using WotStat;
 using WotStat.Extensions;
+using WotStatApi.Models;
 using static WotStat.Constants;
 
 namespace WotStatApi.Services
 {
     public class MockStatService : IStatService
     {
+        public Task<IEnumerable<EstimationGraphPoint>> GetEstimationGraphData(long battleCount, long winCount)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public async Task<IEnumerable<TankModel>> GetTanksAsync(string userName)
         {
             return await Task.Run(() => {

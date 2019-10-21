@@ -21,5 +21,12 @@ namespace WotStatApi.Controllers
         {
             return new JsonResult(await _statService.GetTanksAsync(userName));
         }
+
+        [HttpGet]
+        [Route("Estimation-Graph")]
+        public async Task<ActionResult> GetEstimationGraphAsync(long battleCount, long winCount)
+        {
+            return new JsonResult(await _statService.GetEstimationGraphData(battleCount, winCount));
+        }
     }
 }
