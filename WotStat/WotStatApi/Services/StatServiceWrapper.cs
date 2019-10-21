@@ -12,7 +12,7 @@ namespace WotStatApi.Services
         {
             return await Task.Run(() =>
             {
-                return StatService.GetChartDataByBattlesInfo(battleCount, winCount)
+                return StatService.GetChartData(battleCount, winCount)
                     .Select(pair => new EstimationGraphPoint { WinsLeft = pair.Key, WinRatio = pair.Value });
             });
         }

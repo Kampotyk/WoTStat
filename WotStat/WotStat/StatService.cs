@@ -98,10 +98,10 @@ namespace WotStat
             return playerTanks;
         }
 
-        public static ObservableCollection<KeyValuePair<long, double>> GetChartDataByBattlesInfo(TankModel tank)
-            => GetChartDataByBattlesInfo(tank.BattleCount, tank.WinCount);
+        public static ObservableCollection<KeyValuePair<long, double>> GetChartData(TankModel tank)
+            => GetChartData(tank.BattleCount, tank.WinCount);
 
-        public static ObservableCollection<KeyValuePair<long, double>> GetChartDataByBattlesInfo(long battleCount, long winCount)
+        public static ObservableCollection<KeyValuePair<long, double>> GetChartData(long battleCount, long winCount)
         {
             var chartData = new List<KeyValuePair<long, double>>();
             for (var sessionRatio = Constants.DesiredWinPercent + Constants.GraphStep;

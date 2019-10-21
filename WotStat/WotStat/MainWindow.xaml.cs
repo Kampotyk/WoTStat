@@ -74,7 +74,7 @@ namespace WotStat
             if (e.DetailsElement is Chart mcChart && mcChart.IsVisible)
             {
                 var lineSeries = (LineSeries)mcChart.Series[0];
-                lineSeries.ItemsSource = StatService.GetChartDataByBattlesInfo(tankViewModel.SelectedTank);
+                lineSeries.ItemsSource = StatService.GetChartData(tankViewModel.SelectedTank);
                 lineSeries.Title = "Estimate";
             }
         }
