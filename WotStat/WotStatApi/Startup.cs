@@ -21,6 +21,8 @@ namespace WotStatApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Note: version isn't synched with the actual API version.
+            // In case of adding new APi version this place should be updated to reflect all available API versions.
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info { Title = "WotStat API", Version = "v1" });
@@ -29,6 +31,13 @@ namespace WotStatApi
             services.AddRouting(c =>
             {
                 c.LowercaseUrls = true;
+            });
+
+            services.AddApiVersioning(c =>
+            {
+                c.ReportApiVersions = true;
+                c.AssumeDefaultVersionWhenUnspecified = true;
+                c.DefaultApiVersion = new ApiVersion(1, 0);
             });
 
             services.AddScoped<IStatService, StatServiceWrapper>();
