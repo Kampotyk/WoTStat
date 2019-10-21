@@ -63,6 +63,7 @@
     <Compile Include="Computer.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Extensions\TankExtensions.cs" />
+    <Compile Include="StatService.cs" />
     <Compile Include="TankModel.cs" />
     <Compile Include="Request.cs" />
     <Compile Include="ViewModel.cs" />
