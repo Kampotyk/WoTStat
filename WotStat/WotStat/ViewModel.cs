@@ -50,19 +50,6 @@ namespace WotStat
             return true;
         }
 
-        public ObservableCollection<KeyValuePair<long, double>> GetChartDataForSelectedTank()
-        {
-            var chartData = new List<KeyValuePair<long, double>>();
-            for (var sessionRatio = Constants.DesiredWinPercent + Constants.GraphStep;
-                 sessionRatio < Constants.MaxWinPercent;
-                 sessionRatio += Constants.GraphStep)
-            {
-                var battleCountToDesiredRatio = Computer.GetBattleCountToDesiredRatio(SelectedTank.BattleCount, SelectedTank.WinCount, Constants.DesiredWinPercent, sessionRatio);
-                chartData.Add(new KeyValuePair<long, double>(battleCountToDesiredRatio, sessionRatio));
-            }
-            return new ObservableCollection<KeyValuePair<long,double>>(chartData.OrderByDescending(pair => pair.Value));
-        }
-
         private void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

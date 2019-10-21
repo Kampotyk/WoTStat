@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Linq;
 using WotStat.Extensions;
 
 namespace WotStat
@@ -95,6 +96,19 @@ namespace WotStat
                 }
             }
             return playerTanks;
+        }
+
+        public static ObservableCollection<KeyValuePair<long, double>> GetChartDataForSelectedTank(TankModel tank)
+        {
+            var chartData = new List<KeyValuePair<long, double>>();
+            for (var sessionRatio = Constants.DesiredWinPercent + Constants.GraphStep;
+                 sessionRatio < Constants.MaxWinPercent;
+                 sessionRatio += Constants.GraphStep)
+            {
+                var battleCountToDesiredRatio = Computer.GetBattleCountToDesiredRatio(tank.BattleCount, tank.WinCount, Constants.DesiredWinPercent, sessionRatio);
+                chartData.Add(new KeyValuePair<long, double>(battleCountToDesiredRatio, sessionRatio));
+            }
+            return new ObservableCollection<KeyValuePair<long, double>>(chartData.OrderByDescending(pair => pair.Value));
         }
     }
 }
