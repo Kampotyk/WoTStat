@@ -7,7 +7,7 @@ using WotStat.Extensions;
 
 namespace WotStat
 {
-    static class StatService
+    public static class StatService
     {
         public static string GetAccountIdByName(string name)
         {

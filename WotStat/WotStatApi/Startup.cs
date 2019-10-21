@@ -30,7 +30,7 @@ namespace WotStatApi
                 c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info { Title = "WotStat API", Version = "v1" });
             });
 
-            services.AddScoped<IStatService, MockStatService>();
+            services.AddScoped<IStatService, StatService>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
