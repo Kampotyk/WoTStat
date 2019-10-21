@@ -1,1 +1,17 @@
-<p>stat works!</p>
+<div class="container">
+    <h2>Account Stat</h2>
+    <form (ngSubmit)="onSubmit()" #usernameForm="ngForm">
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" class="form-control" id="username"
+                   required
+                   [(ngModel)]="username" name="username">
+          </div>
+
+        <button type="submit" class="btn btn-success" [disabled]="!usernameForm.form.valid">Submit</button>
+    </form>
+    
+    <hr/>
+
+    <app-stat-list [statList]="loadedStats"></app-stat-list>
+</div>
