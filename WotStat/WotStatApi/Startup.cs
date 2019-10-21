@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using WotStatApi.Services;
 
 namespace WotStatApi
@@ -30,7 +24,12 @@ namespace WotStatApi
                 c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info { Title = "WotStat API", Version = "v1" });
             });
 
-            services.AddScoped<IStatService, StatService>();
+            services.AddRouting(c =>
+            {
+                c.LowercaseUrls = true;
+            });
+
+            services.AddScoped<IStatService, StatServiceWrapper>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }

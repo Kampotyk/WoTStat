@@ -4,7 +4,7 @@ using WotStat;
 
 namespace WotStatApi.Services
 {
-    public class StatService : IStatService
+    public class StatServiceWrapper : IStatService
     {
         public async Task<IEnumerable<TankModel>> GetTanksAsync(string userName)
         {
