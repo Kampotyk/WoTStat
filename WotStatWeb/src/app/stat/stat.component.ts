@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { IStat } from '../models/stat.model';
-import { MockStatProviderService } from '../services/mock-stat-provider.service';
+import { StatProviderService } from '../services/stat-provider.service';
 
 @Component({
   selector: 'app-stat',
@@ -13,7 +13,7 @@ export class StatComponent implements OnInit {
   loadedStats: IStat[];
 
   constructor(
-    private statsProvider: MockStatProviderService
+    private statsProvider: StatProviderService
   ) { }
 
   ngOnInit() {

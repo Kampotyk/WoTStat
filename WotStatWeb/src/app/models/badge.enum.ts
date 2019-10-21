@@ -5,3 +5,5 @@ enum Badge {
     First = 3,
     Master = 4
 }
+
+export { Badge }

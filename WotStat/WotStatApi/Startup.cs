@@ -9,6 +9,8 @@ namespace WotStatApi
 {
     public class Startup
     {
+        private readonly string AllowedOrigins = "_AllowedOrigins";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -31,6 +33,16 @@ namespace WotStatApi
 
             services.AddScoped<IStatService, StatServiceWrapper>();
 
+            services.AddCors(c =>
+            {
+                c.AddPolicy(AllowedOrigins, builder =>
+                {
+                    builder.WithOrigins("http://localhost:4200")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+            });
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
@@ -49,6 +61,8 @@ namespace WotStatApi
                 // serve the Swagger UI at the app's root
                 c.RoutePrefix = string.Empty;
             });
+
+            app.UseCors(AllowedOrigins);
 
             app.UseMvc();
         }
