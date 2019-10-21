@@ -1,6 +1,6 @@
 ﻿namespace WotStat.Extensions
 {
-    static class TankExtensions
+    public static class TankExtensions
     {
         public static TankModel Create(string name, long battleCount, long winCount, Constants.Badge badge)
         {

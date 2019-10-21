@@ -1,6 +1,6 @@
 ﻿namespace WotStat
 {
-    internal static class Constants
+    public static class Constants
     {
         public enum Badge
         {

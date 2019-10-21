@@ -1,6 +1,6 @@
 ﻿namespace WotStat
 {
-    internal class TankModel
+    public class TankModel
     {
         public string Name { get; set; }
         public long BattleCount { get; set; }

@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using WotStatApi.Services;
 
 namespace WotStatApi
 {
@@ -28,6 +29,8 @@ namespace WotStatApi
             {
                 c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info { Title = "WotStat API", Version = "v1" });
             });
+
+            services.AddScoped<IStatService, MockStatService>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
