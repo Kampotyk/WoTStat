@@ -1,5 +1,6 @@
+
 <mat-accordion class="headers-align">
-    <mat-expansion-panel *ngFor="let stat of statList">
+    <mat-expansion-panel *ngFor="let stat of statList" (opened)="onStatOpened(stat.name)">
         <mat-expansion-panel-header>
             <mat-panel-title>
                 {{stat.name}}
@@ -33,7 +34,8 @@
         </div>
         <div class="container">
             <hr/>
-            todo: graph
+            <canvas [attr.id]="getGraphId(stat.name)">{{ chart }}</canvas>
+            <hr/>
         </div>
 
     </mat-expansion-panel>
