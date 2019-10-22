@@ -40,6 +40,8 @@ namespace WotStatApi
                 c.DefaultApiVersion = new ApiVersion(1, 0);
             });
 
+            services.AddMemoryCache();
+
             services.AddScoped<IStatService, StatServiceWrapper>();
 
             services.AddCors(c =>

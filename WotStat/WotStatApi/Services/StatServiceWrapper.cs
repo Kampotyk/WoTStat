@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Extensions.Caching.Memory;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WotStat;
@@ -8,6 +10,13 @@ namespace WotStatApi.Services
 {
     public class StatServiceWrapper : IStatService
     {
+        private IMemoryCache _cache;
+
+        public StatServiceWrapper(IMemoryCache cache)
+        {
+            _cache = cache;
+        }
+
         public async Task<IEnumerable<EstimationGraphPoint>> GetEstimationGraphData(long battleCount, long winCount)
         {
             return await Task.Run(() =>
@@ -19,11 +28,15 @@ namespace WotStatApi.Services
 
         public async Task<IEnumerable<TankModel>> GetTanksAsync(string userName)
         {
-            return await Task.Run(() => {
+            return await Task.Run(async () => {
 
                 var accountId = StatService.GetAccountIdByName(userName);
-                // todo: cash this
-                var tanks = StatService.GetAllTanks();
+
+                var tanks = await _cache.GetOrCreateAsync("tanks", entry => 
+                {
+                    entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(1);
+                    return Task.Run(() => { return StatService.GetAllTanks(); });
+                });
 
                 return StatService.GetPlayersTanks(accountId, tanks);
             });
