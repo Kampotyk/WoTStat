@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { finalize } from 'rxjs/operators';
 import { IStat } from '../models/stat.model';
 import { StatProviderService } from '../services/stat-provider.service';
 
@@ -11,6 +12,8 @@ export class StatComponent implements OnInit {
 
   username: string;
   loadedStats: IStat[];
+  error: string;
+  loading: boolean;
 
   constructor(
     private statsProvider: StatProviderService
@@ -20,8 +23,22 @@ export class StatComponent implements OnInit {
   }
 
   onSubmit() {
+    this.error = '';
+    this.loading = true;
     this.statsProvider.getStats(this.username)
-      .subscribe((stats) => this.loadedStats = stats);
+      .pipe(
+        finalize(() => this.loading = false)
+      )
+      .subscribe(
+        res => this.loadedStats = res,
+        err => this.error = err.error,
+      )
+  }
+
+  onClear() {
+    this.error = '';
+    this.loading = false;
+    this.loadedStats = [];
   }
 
 }

@@ -20,7 +20,15 @@ namespace WotStatApi.Controllers
         [Route("Tanks")]
         public async Task<ActionResult> GetTanksAsync(string userName)
         {
-            return new JsonResult(await _statService.GetTanksAsync(userName));
+            try
+            {
+                var data = await _statService.GetTanksAsync(userName);
+                return new JsonResult(data);
+            }
+            catch
+            {
+                return BadRequest($"Error retrieving data for '{userName}'");
+            }            
         }
 
         [HttpGet]

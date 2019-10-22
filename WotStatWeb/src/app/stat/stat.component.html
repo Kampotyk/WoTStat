@@ -8,10 +8,17 @@
                    [(ngModel)]="username" name="username">
           </div>
 
-        <button type="submit" class="btn btn-success" [disabled]="!usernameForm.form.valid">Submit</button>
+        <button type="reset" class="btn btn-secondary mr-1" (click)="onClear()" >Clear</button>
+        <button type="submit" class="btn btn-success" [disabled]="!usernameForm.form.valid">Search</button>
+        <div class="alert alert-danger mt-1" role="alert" *ngIf="error">
+            <em>Failed to load data: {{error}}</em>
+        </div>
     </form>
     
     <hr/>
+    <div class="contailner " *ngIf="loading">
+        Loading data...
+    </div>
 
-    <app-stat-list [statList]="loadedStats">Loading...</app-stat-list>
+    <app-stat-list [statList]="loadedStats"></app-stat-list>
 </div>
