@@ -12,6 +12,7 @@ import { AboutComponent } from './about/about.component';
 import { HomeComponent } from './home/home.component';
 import { StatListComponent } from './stat-list/stat-list.component';
 import { BadgePipe } from './pipes/badge.pipe';
+import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { BadgePipe } from './pipes/badge.pipe';
     HomeComponent,
     StatListComponent,
     BadgePipe,
+    FooterComponent,
   ],
   imports: [
     BrowserModule,
