@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 import { Chart } from 'chart.js';
 
@@ -46,13 +46,40 @@ export class StatListComponent implements OnInit {
             datasets: [
               {
                 label: 'Wins to get to desired percent',
-                backgroundColor: 'rgba(179, 255, 217, 0.2)',
-                data: winsLeft
+                backgroundColor: 'rgba(51, 255, 51, 0.2)',
+                data: winsLeft,
+                pointRadius: 6,
+                pointHoverRadius: 4,
               }
             ]
           },
           options: {
+            tooltips: {
+              footerFontSize: 11,
+              footerFontStyle: '',
+              titleFontColor: 'rgba(51, 255, 51, 1)',
+              borderWidth: 2,
+              borderColor: 'rgba(51, 255, 51, 0.5)',
+              cornerRadius: 5,
+              callbacks: {
+                title: function(tooltipItem) {
+                  let item = tooltipItem[0];
+                  let title = `WinRatio: ${item.label}\nWins left: ${item.value}`
+                  return title;
+                },
+                label: function() {
+                  return '';
+                },
+                footer: function(tooltipItem) {
+                  let item = tooltipItem[0];
+                  let text = `Number of wins to get to the desired\n` + 
+                    `percent with ${item.label} WinRatio is ${item.value}`
+                  return text;
+                }
+              }
+            },
             responsive: true,
+            maintainAspectRatio: false,
             scales: {
               xAxes: [{
                 display: true,
@@ -63,6 +90,9 @@ export class StatListComponent implements OnInit {
               }],
               yAxes: [{
                 display: true,
+                ticks: {
+                  beginAtZero: true,
+                },
                 scaleLabel: {
                   display: true,
                   labelString: 'Wins Left'

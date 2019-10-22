@@ -33,9 +33,10 @@
             </table>
         </div>
         <div class="container">
-            <hr/>
-            <canvas [attr.id]="getGraphId(stat.name)">{{ chart }}</canvas>
-            <hr/>
+            <!-- Empty div to fix unwanted resize: https://stackoverflow.com/a/45430951/8654991 -->
+            <div>
+                <canvas [attr.id]="getGraphId(stat.name)" class="chart-container">{{ chart }}</canvas>
+            </div>
         </div>
 
     </mat-expansion-panel>

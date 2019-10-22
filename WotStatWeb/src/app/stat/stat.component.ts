@@ -25,6 +25,8 @@ export class StatComponent implements OnInit {
   onSubmit() {
     this.error = '';
     this.loading = true;
+    this.loadedStats = [];
+    
     this.statsProvider.getStats(this.username)
       .pipe(
         finalize(() => this.loading = false)
