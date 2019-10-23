@@ -1,15 +1,17 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+
+import { Observable } from 'rxjs';
+
+import { environment } from '../../environments/environment';
 import { IStat } from '../models/stat.model';
-import { Observable, of } from 'rxjs';
 import { IEstimationGraphPoint } from '../models/estimation-graph-point.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StatProviderService {
-
-  private apiUrl: string = "http://localhost:5000/api";
+  private env = environment;
   private apiVer: string = "v1.0"
   private tankStatEndPoint: string = "stat/tanks";
   private graphDataEndpoint: string = "stat/estimation-graph";
@@ -19,7 +21,7 @@ export class StatProviderService {
   ) { }
 
   private baseApiUrl(endpoint?: string) {
-    return `${this.apiUrl}/${this.apiVer}/${endpoint}`;
+    return `${this.env.apiUrl}/${this.apiVer}/${endpoint}`;
   }
 
   getStats(username: string): Observable<IStat[]> {

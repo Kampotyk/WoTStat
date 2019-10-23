@@ -9,6 +9,7 @@ namespace WotStatApi
 {
     public class Startup
     {
+        private readonly string AllowedOriginsDbg = "_AllowedOriginsDbg";
         private readonly string AllowedOrigins = "_AllowedOrigins";
 
         public Startup(IConfiguration configuration)
@@ -46,9 +47,16 @@ namespace WotStatApi
 
             services.AddCors(c =>
             {
-                c.AddPolicy(AllowedOrigins, builder =>
+                c.AddPolicy(AllowedOriginsDbg, builder =>
                 {
                     builder.WithOrigins("http://localhost:4200")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+
+                c.AddPolicy(AllowedOrigins, builder =>
+                {
+                    builder.WithOrigins("https://wotstat-webui.firebaseapp.com")
                         .AllowAnyHeader()
                         .AllowAnyMethod();
                 });
@@ -73,7 +81,9 @@ namespace WotStatApi
                 c.RoutePrefix = string.Empty;
             });
 
-            app.UseCors(AllowedOrigins);
+            var corsPolicy = env.IsDevelopment() ? AllowedOriginsDbg : AllowedOrigins;
+
+            app.UseCors(corsPolicy);
 
             app.UseMvc();
         }
