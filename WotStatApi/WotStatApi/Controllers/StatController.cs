@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using WotStatApi.Services;
+using WotStatService.Models;
 
 namespace WotStatApi.Controllers
 {
@@ -16,13 +17,13 @@ namespace WotStatApi.Controllers
             _statService = statService;
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("Tanks")]
-        public async Task<ActionResult> GetTanksAsync(string userName)
+        public async Task<ActionResult> GetTanksAsync([FromQuery]string userName, [FromBody]Region region)
         {
             try
             {
-                var data = await _statService.GetTanksAsync(userName);
+                var data = await _statService.GetTanksAsync(userName, region);
                 return new JsonResult(data);
             }
             catch

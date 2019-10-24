@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WotStat;
+using WotStat.Models;
 using WotStatApi.Models;
+using WotStatService.Models;
 
 namespace WotStatApi.Services
 {
@@ -26,19 +28,19 @@ namespace WotStatApi.Services
             });
         }
 
-        public async Task<IEnumerable<TankModel>> GetTanksAsync(string userName)
+        public async Task<IEnumerable<TankModel>> GetTanksAsync(string userName, Region region)
         {
             return await Task.Run(async () => {
 
-                var accountId = StatService.GetAccountIdByName(userName);
+                var accountId = StatService.GetAccountIdByName(userName, region);
 
                 var tanks = await _cache.GetOrCreateAsync("tanks", entry => 
                 {
                     entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(1);
-                    return Task.Run(() => { return StatService.GetAllTanks(); });
+                    return Task.Run(() => { return StatService.GetAllTanks(region); });
                 });
 
-                return StatService.GetPlayersTanks(accountId, tanks);
+                return StatService.GetPlayersTanks(accountId, tanks, region);
             });
         }
     }

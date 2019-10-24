@@ -3,6 +3,7 @@ import { finalize } from 'rxjs/operators';
 import { IStat } from '../models/stat.model';
 import { StatProviderService } from '../services/stat-provider.service';
 import { FilterTypes } from '../models/filter-types.enum';
+import { AvailableRegions, Region } from '../models/region.model';
 
 @Component({
   selector: 'app-stat',
@@ -15,6 +16,8 @@ export class StatComponent implements OnInit {
   loadedStats: IStat[];
   error: string;
   loading: boolean;
+  regions: Region[] = AvailableRegions;
+  selectedRegion: Region;
 
   filters = [
     {
@@ -43,7 +46,7 @@ export class StatComponent implements OnInit {
     this.loading = true;
     this.loadedStats = [];
     
-    this.statsProvider.getStats(this.username)
+    this.statsProvider.getStats(this.selectedRegion, this.username)
       .pipe(
         finalize(() => this.loading = false)
       )
@@ -56,7 +59,8 @@ export class StatComponent implements OnInit {
   onClear() {
     this.error = '';
     this.loading = false;
-    this.loadedStats = [];
+    this.loadedStats = null;
+    this.selectedRegion = null;
   }
 
   sort(type) {

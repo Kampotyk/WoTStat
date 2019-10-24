@@ -1,4 +1,4 @@
-﻿namespace WotStat
+﻿namespace WotStat.Models
 {
     public class TankModel
     {

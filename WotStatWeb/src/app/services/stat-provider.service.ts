@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { IStat } from '../models/stat.model';
 import { IEstimationGraphPoint } from '../models/estimation-graph-point.model';
+import { Region } from '../models/region.model';
 
 @Injectable({
   providedIn: 'root'
@@ -24,8 +25,8 @@ export class StatProviderService {
     return `${this.env.apiUrl}/${this.apiVer}/${endpoint}`;
   }
 
-  getStats(username: string): Observable<IStat[]> {
-    return this.http.get<IStat[]>(`${this.baseApiUrl(this.tankStatEndPoint)}/?userName=${username}`);
+  getStats(region: Region, username: string): Observable<IStat[]> {
+    return this.http.get<IStat[]>(`${this.baseApiUrl(this.tankStatEndPoint)}/?region=${region.urlSuffix}&userName=${username}`);
   }
 
   getEstimationGraphData(battlecount: number, winCount: number): Observable<IEstimationGraphPoint[]> {

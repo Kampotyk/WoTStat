@@ -1,4 +1,6 @@
-﻿namespace WotStat.Extensions
+﻿using WotStat.Models;
+
+namespace WotStat.Extensions
 {
     public static class TankExtensions
     {

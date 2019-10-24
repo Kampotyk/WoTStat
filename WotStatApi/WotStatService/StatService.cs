@@ -5,12 +5,14 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using WotStat.Extensions;
+using WotStat.Models;
+using WotStatService.Models;
 
 namespace WotStat
 {
     public static class StatService
     {
-        public static string GetAccountIdByName(string name)
+        public static string GetAccountIdByName(string name, Region region)
         {
             var accountId = String.Empty;
             var requestParams = new NameValueCollection
@@ -20,7 +22,7 @@ namespace WotStat
                 { "limit", "1" }
             };
 
-            var jsonResult = Request.PostRequest(Constants.AccountListUrl, requestParams);
+            var jsonResult = Request.PostRequest(UrlResolver.AccountListUrl(region), requestParams);
 
             if (String.IsNullOrEmpty(jsonResult))
             {
@@ -33,7 +35,7 @@ namespace WotStat
             return accountId;
         }
 
-        public static Dictionary<string, string> GetAllTanks()
+        public static Dictionary<string, string> GetAllTanks(Region region)
         {
             var tanks = new Dictionary<string, string>();
 
@@ -44,7 +46,7 @@ namespace WotStat
                 { "fields", "short_name, tank_id" }
             };
 
-            var jsonResult = Request.PostRequest(Constants.TanksListUrl, requestParams);
+            var jsonResult = Request.PostRequest(UrlResolver.TanksListUrl(region), requestParams);
             if (String.IsNullOrEmpty(jsonResult))
             {
                 return tanks;
@@ -59,7 +61,8 @@ namespace WotStat
             return tanks;
         }
 
-        public static ObservableCollection<TankModel> GetPlayersTanks(string accountId, Dictionary<string, string> tanks)
+        public static ObservableCollection<TankModel> GetPlayersTanks(string accountId
+            , Dictionary<string, string> tanks, Region region)
         {
             var playerTanks = new ObservableCollection<TankModel>();
 
@@ -70,7 +73,7 @@ namespace WotStat
                 { "account_id", accountId }
             };
 
-            var jsonResult = Request.PostRequest(Constants.PlayersTanksUrl, requestParams);
+            var jsonResult = Request.PostRequest(UrlResolver.PlayersTanksUrl(region), requestParams);
 
             if (String.IsNullOrEmpty(jsonResult))
             {
@@ -108,7 +111,8 @@ namespace WotStat
                  sessionRatio < Constants.MaxWinPercent;
                  sessionRatio += Constants.GraphStep)
             {
-                var battleCountToDesiredRatio = Computer.GetBattleCountToDesiredRatio(battleCount, winCount, Constants.DesiredWinPercent, sessionRatio);
+                var battleCountToDesiredRatio = Computer.GetBattleCountToDesiredRatio(battleCount
+                    , winCount , Constants.DesiredWinPercent, sessionRatio);
                 chartData.Add(new KeyValuePair<long, double>(battleCountToDesiredRatio, sessionRatio));
             }
             return new ObservableCollection<KeyValuePair<long, double>>(chartData.OrderByDescending(pair => pair.Value));
