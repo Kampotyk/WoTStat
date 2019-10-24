@@ -1,0 +1,15 @@
+<mat-accordion class="headers-align">
+    <mat-expansion-panel *ngFor="let stat of statList">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                {{stat.name}}
+            </mat-panel-title>
+            <mat-panel-description>
+                Battles: {{stat.battleCount}} | Win Rate: {{stat.winRatio}}%
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <app-stat-details [stat]="stat"></app-stat-details>
+
+    </mat-expansion-panel>
+</mat-accordion>

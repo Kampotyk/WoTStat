@@ -1,0 +1,34 @@
+<div class="container">
+    <table class="table table-striped">
+        <tr>
+            <th>Tank Name</th>
+            <td>{{ stat.name }}</td>
+        </tr>
+        <tr>
+            <th>Battcle Count</th>
+            <td>{{ stat.battleCount }}</td>
+        </tr>
+        <tr>
+            <th>Win Count</th>
+            <td>{{ stat.winCount }}</td>
+        </tr>
+        <tr>
+            <th>Win Ratio</th>
+            <td>{{ stat.winRatio }}</td>
+        </tr>
+        <tr>
+            <th>Wins To Desired Percent</th>
+            <td>{{ stat.winsToDesiredPercent }}</td>
+        </tr>
+        <tr>
+            <th>Badge</th>
+            <td>{{ stat.badge | badge }}</td>
+        </tr>
+    </table>
+</div>
+<div class="container">
+    <!-- Empty div to fix unwanted resize: https://stackoverflow.com/a/45430951/8654991 -->
+    <div>
+        <canvas [attr.id]="getGraphId(stat.name)" class="chart-container">{{ chart }}</canvas>
+    </div>
+</div>

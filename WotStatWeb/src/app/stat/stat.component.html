@@ -1,0 +1,38 @@
+<div class="container mt-3">
+    <h2>Account Stat</h2>
+    <form (ngSubmit)="onSubmit()" #usernameForm="ngForm">
+        <div class="form-group">
+            <label for="selectedRegion">Select your region</label>
+            <select class="custom-select form-control" [(ngModel)]="selectedRegion" name="region" required>
+                <option value="">Select your region</option>
+                <option *ngFor="let region of regions" [ngValue]="region">{{region.name}}</option>
+            </select>
+        </div>
+        <div class="form-group mt-2">
+            <label for="username">WoT username</label>
+            <input type="text" class="form-control" id="username"
+                   required
+                   [(ngModel)]="username" name="username">
+        </div>
+
+        <button type="reset" class="btn btn-secondary mr-1" (click)="onClear()" >Clear</button>
+        <button type="submit" class="btn btn-success" [disabled]="!usernameForm.form.valid">Search</button>
+        <div class="alert alert-danger mt-1" role="alert" *ngIf="error">
+            <em>Failed to load data: {{error}}</em>
+        </div>
+    </form>
+    
+    <hr/>
+    <div class="contailner" *ngIf="loading">
+        Loading data...
+    </div>
+
+    <div class="mb-2" *ngIf="loadedStats && !loading">
+        Sort by: 
+        <select (change)="sort($event.target.value)">
+            <option *ngFor="let filter of filters" [value]="filter.type">{{filter.display}}</option>
+        </select>
+    </div>
+
+    <app-stat-list [statList]="loadedStats"></app-stat-list>
+</div>
