@@ -1,23 +1,29 @@
 <div class="container">
     <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Tank Name</th>
-                <th>Battcle Count</th>
-                <th>Win Count</th>
-                <th>Win Ratio</th>
-                <th>Wins To Desired Percent</th>
-                <th>Badge</th>
-            </tr>
-        </thead>
-        <tbody>
+        <tr>
+            <th>Tank Name</th>
             <td>{{ stat.name }}</td>
+        </tr>
+        <tr>
+            <th>Battcle Count</th>
             <td>{{ stat.battleCount }}</td>
+        </tr>
+        <tr>
+            <th>Win Count</th>
             <td>{{ stat.winCount }}</td>
+        </tr>
+        <tr>
+            <th>Win Ratio</th>
             <td>{{ stat.winRatio }}</td>
+        </tr>
+        <tr>
+            <th>Wins To Desired Percent</th>
             <td>{{ stat.winsToDesiredPercent }}</td>
+        </tr>
+        <tr>
+            <th>Badge</th>
             <td>{{ stat.badge | badge }}</td>
-        </tbody>
+        </tr>
     </table>
 </div>
 <div class="container">
