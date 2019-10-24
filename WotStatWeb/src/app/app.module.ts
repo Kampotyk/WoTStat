@@ -13,6 +13,7 @@ import { HomeComponent } from './home/home.component';
 import { StatListComponent } from './stat-list/stat-list.component';
 import { BadgePipe } from './pipes/badge.pipe';
 import { FooterComponent } from './footer/footer.component';
+import { StatDetailsComponent } from './stat-details/stat-details.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { FooterComponent } from './footer/footer.component';
     StatListComponent,
     BadgePipe,
     FooterComponent,
+    StatDetailsComponent,
   ],
   imports: [
     BrowserModule,
