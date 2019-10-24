@@ -26,7 +26,7 @@ export class StatProviderService {
   }
 
   getStats(region: Region, username: string): Observable<IStat[]> {
-    return this.http.get<IStat[]>(`${this.baseApiUrl(this.tankStatEndPoint)}/?region=${region.urlSuffix}&userName=${username}`);
+    return this.http.post<IStat[]>(`${this.baseApiUrl(this.tankStatEndPoint)}/?userName=${username}`, region);
   }
 
   getEstimationGraphData(battlecount: number, winCount: number): Observable<IEstimationGraphPoint[]> {
