@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using WotStat.Extensions;
+using WotStat.Models;
+using WotStatService.Models;
 
 namespace WotStat
 {
@@ -14,6 +10,7 @@ namespace WotStat
     {
         private ObservableCollection<TankModel> tanks;
         private TankModel selectedTank;
+        private Region defaultRegion = new Region { Name = "Russia", UrlSuffix = "ru" };
 
         public ObservableCollection<TankModel> Tanks
         {
@@ -45,8 +42,9 @@ namespace WotStat
         public async Task<bool> LoadPlayerStats(string playerName)
         {
             Tanks = await Task.Factory.StartNew(() => StatService.GetPlayersTanks(
-                StatService.GetAccountIdByName(playerName)
-                , StatService.GetAllTanks()));
+                StatService.GetAccountIdByName(playerName, defaultRegion)
+                , StatService.GetAllTanks(defaultRegion)
+                , defaultRegion));
             return true;
         }
 
