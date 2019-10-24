@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("GC")]
 [assembly: AssemblyProduct("WotStatService")]
-[assembly: AssemblyCopyright("Copyright © EPAM GC 2019")]
+[assembly: AssemblyCopyright("Copyright © GC 2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
