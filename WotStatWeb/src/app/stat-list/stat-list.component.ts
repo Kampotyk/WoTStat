@@ -18,3 +18,4 @@ export class StatListComponent implements OnInit {
   }
 
 }
+

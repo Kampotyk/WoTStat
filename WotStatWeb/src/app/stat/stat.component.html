@@ -20,5 +20,12 @@
         Loading data...
     </div>
 
+    <div class="mb-2" *ngIf="loadedStats && !loading">
+        Sort by: 
+        <select (change)="sort($event.target.value)">
+            <option *ngFor="let filter of filters" [value]="filter.type">{{filter.display}}</option>
+        </select>
+    </div>
+
     <app-stat-list [statList]="loadedStats"></app-stat-list>
 </div>
