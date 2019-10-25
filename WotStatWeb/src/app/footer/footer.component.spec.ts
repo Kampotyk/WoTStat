@@ -22,4 +22,9 @@ describe('FooterComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should have current year', () => {
+    const currentYear = new Date().getFullYear();
+    expect(component.year).toBe(currentYear);
+  });
 });

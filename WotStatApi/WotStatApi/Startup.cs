@@ -49,7 +49,10 @@ namespace WotStatApi
             {
                 c.AddPolicy(AllowedOriginsDbg, builder =>
                 {
-                    builder.WithOrigins("http://localhost:4200")
+                    builder.WithOrigins(new string[] {
+                            "http://localhost:4200",    // local angular host
+                            "http://localhost:9876",    // local karma test
+                        })
                         .AllowAnyHeader()
                         .AllowAnyMethod();
                 });

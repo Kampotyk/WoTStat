@@ -36,7 +36,7 @@ export class StatDetailsComponent implements OnInit {
     return `graph-${statTankName.split(' ').join('_')}`;
   }
 
-  loadGraphData(stat: IStat, elementId: string) {
+  private loadGraphData(stat: IStat, elementId: string) {
     this.statProvider.getEstimationGraphData(stat.battleCount, stat.winCount)
       .subscribe(data => {
         let winRatios = data.map(val => val.winRatio);
