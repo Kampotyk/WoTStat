@@ -6,7 +6,8 @@ namespace WotStat.Extensions
     {
         public static TankModel Create(string name, long battleCount, long winCount, Constants.Badge badge)
         {
-            TankModel tank = new TankModel {
+            TankModel tank = new TankModel
+            {
                 Name = name,
                 BattleCount = battleCount,
                 WinCount = winCount,
@@ -20,6 +21,10 @@ namespace WotStat.Extensions
                     , winCount
                     , Constants.DesiredWinPercent
                     , Constants.MaxWinPercent);
+            }
+            else
+            {
+                tank.WinsToDesiredPercent = 0;
             }
 
             return tank;

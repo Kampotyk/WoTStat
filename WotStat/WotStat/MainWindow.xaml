@@ -4,48 +4,100 @@
         xmlns:DVC="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
         Title="WoT Stats" Height="600" Width="1000" ResizeMode="NoResize" Icon="Resourses/wot.jpg">
     <Grid Margin="0,0,0,0">
-        <TextBox x:Name="txtPlayerName" HorizontalAlignment="Left" Height="23"
+        <StackPanel FocusManager.FocusedElement="{Binding ElementName=txtPlayerName}">
+            <TextBox x:Name="txtPlayerName" HorizontalAlignment="Left" Height="22"
                  Margin="408,38,0,0" VerticalAlignment="Top" Width="120" ToolTip="Player Nickname"
                  MaxLines="1" MaxLength="24" PreviewTextInput="TextBoxValidation"
-                 DataObject.Pasting="TextBoxPasting" TextChanged="OnTextChanged"/>
+                 DataObject.Pasting="TextBoxPasting" TextChanged="OnTextChanged" VerticalContentAlignment="Center"/>
+        </StackPanel>
         <Button x:Name="btnSearch" Content="Search" HorizontalAlignment="Left" Margin="545,38,0,0"
                 VerticalAlignment="Top" Width="74" IsDefault="True" Click="OnSearch" IsEnabled="False" Height="22"/>
-        <DataGrid x:Name="grdStats" Margin="0,80,0,0"
-                  AutoGenerateColumns="False" ItemsSource="{Binding Tanks}"
-                  SelectedItem="{Binding SelectedTank}" SelectionMode="Single" SelectionUnit="FullRow"
-                  HorizontalAlignment="Left" Width="994"
-                  IsReadOnly="True" CanUserAddRows="False" RowDetailsVisibilityMode="Collapsed">
-            <DataGrid.ItemContainerStyle>
-                <Style TargetType="DataGridRow">
-                    <EventSetter Event="MouseUp" Handler="DataGridMouseLeftButtonUp"/>
-                </Style>
-            </DataGrid.ItemContainerStyle>
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Tank Name" Binding="{Binding Name}" Width="0.2*"/>
-                <DataGridTextColumn Header="Battles" Binding="{Binding BattleCount}" Width="0.2*"/>
-                <DataGridTextColumn Header="Wins" Binding="{Binding WinRatio}" Width="0.2*"/>
-                <DataGridTextColumn Header="Wins To 50%" Binding="{Binding WinsToDesiredPercent}" Width="0.2*"/>
-                <DataGridTextColumn Header="Badge" Binding="{Binding Badge}" Width="0.2*"/>
-            </DataGrid.Columns>
-            <DataGrid.RowDetailsTemplate>
-                <DataTemplate>
-                    <DVC:Chart Name="mcChart"
-                        Width="700" Height="300"
-                        Background="LightSteelBlue">
-                        <DVC:Chart.Axes>
-                            <DVC:LinearAxis Orientation="Y" Title="Battles"/>
-                            <DVC:LinearAxis Orientation="X" Title="Win Ratio"/>
-                        </DVC:Chart.Axes>
-                        <DVC:Chart.Series>
-                            <DVC:LineSeries
-                                ItemsSource="{Binding Path=DetailItems}"
-                                DependentValueBinding="{Binding Path=Key}"
-                                IndependentValueBinding="{Binding Path=Value}">
-                            </DVC:LineSeries>
-                        </DVC:Chart.Series>
-                    </DVC:Chart>
-                </DataTemplate>
-            </DataGrid.RowDetailsTemplate>
-        </DataGrid>
+        <TabControl x:Name="tabControl" HorizontalAlignment="Left" Height="491" Margin="0,80,0,0" VerticalAlignment="Top" Width="994">
+            <TabItem Header="Wins To 50%">
+                <Grid Background="#FFE5E5E5">
+                    <DataGrid x:Name="grdStats"
+                        AutoGenerateColumns="False" ItemsSource="{Binding WeakTanks}"
+                        SelectedItem="{Binding SelectedWeakTank}" SelectionMode="Single" SelectionUnit="FullRow"
+                        IsReadOnly="True" CanUserAddRows="False" RowDetailsVisibilityMode="Collapsed" Margin="3,3,3,3">
+                        <DataGrid.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="BorderThickness" Value="0"/>
+                                <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                            </Style>
+                        </DataGrid.CellStyle>
+                        <DataGrid.ItemContainerStyle>
+                            <Style TargetType="{x:Type DataGridRow}">
+                                <EventSetter Event="UIElement.MouseUp" Handler="WinTanksDataGridMouseLeftButtonUp"/>
+                            </Style>
+                        </DataGrid.ItemContainerStyle>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Tank Name" Binding="{Binding Name}" Width="0.2*"/>
+                            <DataGridTextColumn Header="Battles" Binding="{Binding BattleCount}" Width="0.2*"/>
+                            <DataGridTextColumn Header="Wins" Binding="{Binding WinRatio}" Width="0.2*"/>
+                            <DataGridTextColumn Header="Wins To 50%" Binding="{Binding WinsToDesiredPercent}" Width="0.2*"/>
+                            <DataGridTextColumn Header="Badge" Binding="{Binding Badge}" Width="0.2*"/>
+                        </DataGrid.Columns>
+                        <DataGrid.RowDetailsTemplate>
+                            <DataTemplate>
+                                <DVC:Chart x:Name="mcChart"
+                                    Width="700" Height="300"
+                                    Background="LightSteelBlue">
+                                    <DVC:Chart.Axes>
+                                        <DVC:LinearAxis Orientation="Y" Title="Battles"/>
+                                        <DVC:LinearAxis Orientation="X" Title="Win Ratio"/>
+                                    </DVC:Chart.Axes>
+                                    <DVC:LineSeries
+                                        ItemsSource="{Binding DetailItems}"
+                                        DependentValueBinding="{Binding Key}"
+                                        IndependentValueBinding="{Binding Value}"/>
+                                </DVC:Chart>
+                            </DataTemplate>
+                        </DataGrid.RowDetailsTemplate>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="No Master">
+                <Grid Background="#FFE5E5E5">
+                    <DataGrid x:Name="grdMastery"
+                        AutoGenerateColumns="False" ItemsSource="{Binding NoMasterTanks}"
+                        SelectedItem="{Binding SelectedNoMasterTank}" SelectionMode="Single" SelectionUnit="FullRow"
+                        IsReadOnly="True" CanUserAddRows="False" RowDetailsVisibilityMode="Collapsed" Margin="3">
+                        <DataGrid.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="BorderThickness" Value="0"/>
+                                <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                            </Style>
+                        </DataGrid.CellStyle>
+                        <DataGrid.ItemContainerStyle>
+                            <Style TargetType="{x:Type DataGridRow}">
+                                <EventSetter Event="UIElement.MouseUp" Handler="MasteryTanksDataGridMouseLeftButtonUp"/>
+                            </Style>
+                        </DataGrid.ItemContainerStyle>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Tank Name" Binding="{Binding Name}" Width="0.4*"/>
+                            <DataGridTextColumn Header="Battles" Binding="{Binding BattleCount}" Width="0.2*"/>
+                            <DataGridTextColumn Header="Wins" Binding="{Binding WinRatio}" Width="0.2*"/>
+                            <DataGridTextColumn Header="Badge" Binding="{Binding Badge}" Width="0.2*"/>
+                        </DataGrid.Columns>
+                        <DataGrid.RowDetailsTemplate>
+                            <DataTemplate>
+                                <!--<DVC:Chart x:Name="mcChart"
+                                    Width="700" Height="300"
+                                    Background="LightSteelBlue">
+                                    <DVC:Chart.Axes>
+                                        <DVC:LinearAxis Orientation="Y" Title="Battles"/>
+                                        <DVC:LinearAxis Orientation="X" Title="Win Ratio"/>
+                                    </DVC:Chart.Axes>
+                                    <DVC:LineSeries
+                                        ItemsSource="{Binding DetailItems}"
+                                        DependentValueBinding="{Binding Key}"
+                                        IndependentValueBinding="{Binding Value}"/>
+                                </DVC:Chart>-->
+                            </DataTemplate>
+                        </DataGrid.RowDetailsTemplate>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>

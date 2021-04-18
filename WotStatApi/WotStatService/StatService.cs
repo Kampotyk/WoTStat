@@ -61,10 +61,10 @@ namespace WotStat
             return tanks;
         }
 
-        public static ObservableCollection<TankModel> GetPlayersTanks(string accountId
-            , Dictionary<string, string> tanks, Region region)
+        public static List<TankModel> GetPlayerTankStats(string accountId,
+            Dictionary<string, string> tanks, Region region)
         {
-            var playerTanks = new ObservableCollection<TankModel>();
+            var playerTanks = new List<TankModel>();
 
             var requestParams = new NameValueCollection
             {
@@ -91,10 +91,7 @@ namespace WotStat
                         var wins = tank.statistics.wins.Value;
                         var badge = (Constants.Badge)tank.mark_of_mastery.Value;
                         var tankModel = TankExtensions.Create(tankName, battles, wins, badge);
-                        if (tankModel.WinsToDesiredPercent > 0)
-                        {
-                            playerTanks.Add(tankModel);
-                        }
+                        playerTanks.Add(tankModel);
                     }
                 }
             }
@@ -112,7 +109,7 @@ namespace WotStat
                  sessionRatio += Constants.GraphStep)
             {
                 var battleCountToDesiredRatio = Computer.GetBattleCountToDesiredRatio(battleCount
-                    , winCount , Constants.DesiredWinPercent, sessionRatio);
+                    , winCount, Constants.DesiredWinPercent, sessionRatio);
                 chartData.Add(new KeyValuePair<long, double>(battleCountToDesiredRatio, sessionRatio));
             }
             return new ObservableCollection<KeyValuePair<long, double>>(chartData.OrderByDescending(pair => pair.Value));
