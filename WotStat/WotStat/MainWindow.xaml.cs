@@ -19,7 +19,8 @@ namespace WotStat
         {
             InitializeComponent();
             DataContext = tankViewModel;
-            grdStats.RowDetailsVisibilityChanged += RowDetailsVisibilityChanged;
+            grdStats.RowDetailsVisibilityChanged += StatsRowDetailsVisibilityChanged;
+            grdMastery.RowDetailsVisibilityChanged += MasteryRowDetailsVisibilityChanged;
         }
 
         private async void OnSearch(object sender, RoutedEventArgs e)
@@ -69,13 +70,23 @@ namespace WotStat
             return !regex.IsMatch(text);
         }
 
-        private void RowDetailsVisibilityChanged(object sender, DataGridRowDetailsEventArgs e)
+        private void StatsRowDetailsVisibilityChanged(object sender, DataGridRowDetailsEventArgs e)
         {
-            if (e.DetailsElement is Chart mcChart && mcChart.IsVisible)
+            if (e.DetailsElement is Chart statsChart && statsChart.IsVisible)
             {
-                var lineSeries = (LineSeries)mcChart.Series[0];
-                lineSeries.ItemsSource = StatService.GetChartData(tankViewModel.SelectedWeakTank);
+                var lineSeries = (LineSeries)statsChart.Series[0];
+                lineSeries.ItemsSource = StatService.StatsGetChartData(tankViewModel.SelectedWeakTank);
                 lineSeries.Title = "Estimate";
+            }
+        }
+
+        private void MasteryRowDetailsVisibilityChanged(object sender, DataGridRowDetailsEventArgs e)
+        {
+            if (e.DetailsElement is Chart masteryChart && masteryChart.IsVisible)
+            {
+                var columntSeries = (ColumnSeries)masteryChart.Series[0];
+                columntSeries.ItemsSource = StatService.MasteryGetChartData(tankViewModel.SelectedNoMasterTank);
+                columntSeries.Title = "Mastery";
             }
         }
 
@@ -109,30 +120,30 @@ namespace WotStat
 
         private void MasteryTanksDataGridMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            //if (e.Source.GetType() == typeof(DataGridCellsPresenter))
-            //{
-            //    if (sender is DataGridRow row)
-            //    {
-            //        var dataitem = row.DataContext;
-            //        var visibility = grdStats.GetDetailsVisibilityForItem(dataitem);
+            if (e.Source.GetType() == typeof(DataGridCellsPresenter))
+            {
+                if (sender is DataGridRow row)
+                {
+                    var dataitem = row.DataContext;
+                    var visibility = grdMastery.GetDetailsVisibilityForItem(dataitem);
 
-            //        if (tankViewModel.PrevSelectedWeakTank != null && grdStats.GetDetailsVisibilityForItem(tankViewModel.PrevSelectedWeakTank) == Visibility.Visible)
-            //        {
-            //            grdStats.SetDetailsVisibilityForItem(tankViewModel.PrevSelectedWeakTank, Visibility.Collapsed);
-            //        }
+                    if (tankViewModel.PrevSelectedNoMasterTank != null && grdMastery.GetDetailsVisibilityForItem(tankViewModel.PrevSelectedNoMasterTank) == Visibility.Visible)
+                    {
+                        grdMastery.SetDetailsVisibilityForItem(tankViewModel.PrevSelectedNoMasterTank, Visibility.Collapsed);
+                    }
 
-            //        if (row.IsSelected && visibility == Visibility.Visible)
-            //        {
-            //            grdStats.SetDetailsVisibilityForItem(dataitem, Visibility.Collapsed);
-            //        }
-            //        else
-            //        {
-            //            grdStats.SetDetailsVisibilityForItem(dataitem, Visibility.Visible);
-            //        }
-            //    }
+                    if (row.IsSelected && visibility == Visibility.Visible)
+                    {
+                        grdMastery.SetDetailsVisibilityForItem(dataitem, Visibility.Collapsed);
+                    }
+                    else
+                    {
+                        grdMastery.SetDetailsVisibilityForItem(dataitem, Visibility.Visible);
+                    }
+                }
 
-            //    tankViewModel.PrevSelectedWeakTank = tankViewModel.SelectedWeakTank;
-            //}
+                tankViewModel.PrevSelectedNoMasterTank = tankViewModel.SelectedNoMasterTank;
+            }
         }
     }
 }

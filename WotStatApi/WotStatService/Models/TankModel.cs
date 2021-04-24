@@ -1,4 +1,6 @@
-﻿namespace WotStat.Models
+﻿using System.Collections.Generic;
+
+namespace WotStat.Models
 {
     public class TankModel
     {
@@ -8,5 +10,6 @@
         public double WinRatio { get; set; }
         public long WinsToDesiredPercent { get; set; }
         public Constants.Badge Badge { get; set; }
+        public List<string> Mastery { get; set; }
     }
 }

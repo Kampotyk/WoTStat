@@ -39,7 +39,7 @@
                         </DataGrid.Columns>
                         <DataGrid.RowDetailsTemplate>
                             <DataTemplate>
-                                <DVC:Chart x:Name="mcChart"
+                                <DVC:Chart x:Name="statsChart"
                                     Width="700" Height="300"
                                     Background="LightSteelBlue">
                                     <DVC:Chart.Axes>
@@ -47,7 +47,7 @@
                                         <DVC:LinearAxis Orientation="X" Title="Win Ratio"/>
                                     </DVC:Chart.Axes>
                                     <DVC:LineSeries
-                                        ItemsSource="{Binding DetailItems}"
+                                        ItemsSource="{Binding}"
                                         DependentValueBinding="{Binding Key}"
                                         IndependentValueBinding="{Binding Value}"/>
                                 </DVC:Chart>
@@ -81,18 +81,18 @@
                         </DataGrid.Columns>
                         <DataGrid.RowDetailsTemplate>
                             <DataTemplate>
-                                <!--<DVC:Chart x:Name="mcChart"
+                                <DVC:Chart x:Name="masteryChart"
                                     Width="700" Height="300"
                                     Background="LightSteelBlue">
                                     <DVC:Chart.Axes>
-                                        <DVC:LinearAxis Orientation="Y" Title="Battles"/>
-                                        <DVC:LinearAxis Orientation="X" Title="Win Ratio"/>
+                                        <DVC:CategoryAxis Orientation="X"/>
+                                        <DVC:LinearAxis Orientation="Y" ShowGridLines="True" Title="Experience"/>
                                     </DVC:Chart.Axes>
-                                    <DVC:LineSeries
-                                        ItemsSource="{Binding DetailItems}"
-                                        DependentValueBinding="{Binding Key}"
-                                        IndependentValueBinding="{Binding Value}"/>
-                                </DVC:Chart>-->
+                                    <DVC:ColumnSeries
+                                        ItemsSource="{Binding}"
+                                        IndependentValueBinding="{Binding Key}"
+                                        DependentValueBinding="{Binding Value}"/>
+                                </DVC:Chart>
                             </DataTemplate>
                         </DataGrid.RowDetailsTemplate>
                     </DataGrid>

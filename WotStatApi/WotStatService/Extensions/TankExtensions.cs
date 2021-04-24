@@ -1,10 +1,11 @@
-﻿using WotStat.Models;
+﻿using System.Collections.Generic;
+using WotStat.Models;
 
 namespace WotStat.Extensions
 {
     public static class TankExtensions
     {
-        public static TankModel Create(string name, long battleCount, long winCount, Constants.Badge badge)
+        public static TankModel Create(string name, long battleCount, long winCount, Constants.Badge badge, List<string> mastery)
         {
             TankModel tank = new TankModel
             {
@@ -12,7 +13,8 @@ namespace WotStat.Extensions
                 BattleCount = battleCount,
                 WinCount = winCount,
                 WinRatio = Computer.GetWinRatio(battleCount, winCount),
-                Badge = badge
+                Badge = badge,
+                Mastery = mastery
             };
 
             if (tank.WinRatio < Constants.DesiredWinPercent)

@@ -62,7 +62,7 @@ namespace WotStat
         }
 
         public static List<TankModel> GetPlayerTankStats(string accountId,
-            Dictionary<string, string> tanks, Region region)
+            Dictionary<string, string> tanks, Dictionary<string, List<string>> tanksMastery, Region region)
         {
             var playerTanks = new List<TankModel>();
 
@@ -90,7 +90,9 @@ namespace WotStat
                         var battles = tank.statistics.battles.Value;
                         var wins = tank.statistics.wins.Value;
                         var badge = (Constants.Badge)tank.mark_of_mastery.Value;
-                        var tankModel = TankExtensions.Create(tankName, battles, wins, badge);
+                        tanksMastery.TryGetValue(tank.tank_id.ToString(), out List<string> mastery);
+
+                        var tankModel = TankExtensions.Create(tankName, battles, wins, badge, mastery);
                         playerTanks.Add(tankModel);
                     }
                 }
@@ -98,10 +100,35 @@ namespace WotStat
             return playerTanks;
         }
 
-        public static ObservableCollection<KeyValuePair<long, double>> GetChartData(TankModel tank)
-            => GetChartData(tank.BattleCount, tank.WinCount);
+        public static Dictionary<string, List<string>> GetAllTanksMastery(Region region)
+        {
+            var tanks = new Dictionary<string, List<string>>();
 
-        public static ObservableCollection<KeyValuePair<long, double>> GetChartData(long battleCount, long winCount)
+            var requestParams = new NameValueCollection { };
+
+            var jsonResult = Request.PostRequest(UrlResolver.TanksMasteryListUrl(region), requestParams);
+            if (String.IsNullOrEmpty(jsonResult))
+            {
+                return tanks;
+            }
+
+            dynamic result = JsonConvert.DeserializeObject<dynamic>(jsonResult);
+            foreach (dynamic tank in result.data)
+            {
+                var mastery = new List<string>();
+                foreach (dynamic value in tank.mastery)
+                {
+                    mastery.Add(value.ToString());
+                }
+                tanks.Add(tank.id.ToString(), mastery);
+            }
+            return tanks;
+        }
+
+        public static ObservableCollection<KeyValuePair<long, double>> StatsGetChartData(TankModel tank)
+            => StatsGetChartData(tank.BattleCount, tank.WinCount);
+
+        public static ObservableCollection<KeyValuePair<long, double>> StatsGetChartData(long battleCount, long winCount)
         {
             var chartData = new List<KeyValuePair<long, double>>();
             for (var sessionRatio = Constants.DesiredWinPercent + Constants.GraphStep;
@@ -113,6 +140,23 @@ namespace WotStat
                 chartData.Add(new KeyValuePair<long, double>(battleCountToDesiredRatio, sessionRatio));
             }
             return new ObservableCollection<KeyValuePair<long, double>>(chartData.OrderByDescending(pair => pair.Value));
+        }
+
+        public static ObservableCollection<KeyValuePair<string, int>> MasteryGetChartData(TankModel tank)
+             => MasteryGetChartData(tank.Mastery);
+
+        public static ObservableCollection<KeyValuePair<string, int>> MasteryGetChartData(List<string> mastery)
+        {
+            var chartData = new List<KeyValuePair<string, int>>();
+
+            List<int> sortedList = mastery.Select(int.Parse).OrderBy(value => value).ToList();
+
+            int i = 0;
+            for (var badge = Constants.Badge.Third; badge <= Constants.Badge.Master; badge++, i++)
+            {
+                chartData.Add(new KeyValuePair<string, int>(Enum.GetName(typeof(Constants.Badge), badge), sortedList[i]));
+            }
+            return new ObservableCollection<KeyValuePair<string, int>>(chartData);
         }
     }
 }

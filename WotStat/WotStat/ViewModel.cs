@@ -71,13 +71,14 @@ namespace WotStat
 
         public async Task<bool> LoadPlayerTankStats(string playerName)
         {
-            var allTanks = await Task.Factory.StartNew(() => StatService.GetPlayerTankStats(
+            var allPlayerTanks = await Task.Factory.StartNew(() => StatService.GetPlayerTankStats(
                 StatService.GetAccountIdByName(playerName, defaultRegion)
                 , StatService.GetAllTanks(defaultRegion)
+                , StatService.GetAllTanksMastery(defaultRegion)
                 , defaultRegion));
 
-            WeakTanks = new ObservableCollection<TankModel>(allTanks.Where(tank => tank.WinsToDesiredPercent > 0));
-            NoMasterTanks = new ObservableCollection<TankModel>(allTanks.Where(tank => tank.Badge != Constants.Badge.Master));
+            WeakTanks = new ObservableCollection<TankModel>(allPlayerTanks.Where(tank => tank.WinsToDesiredPercent > 0));
+            NoMasterTanks = new ObservableCollection<TankModel>(allPlayerTanks.Where(tank => tank.Badge != Constants.Badge.Master));
 
             return true;
         }
