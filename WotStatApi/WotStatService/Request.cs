@@ -14,5 +14,14 @@ namespace WotStat
                 return Encoding.Default.GetString(response);
             }
         }
+
+        public static string GetRequest(string url)
+        {
+            using (var client = new WebClient())
+            {
+                var response = client.DownloadData(url);
+                return Encoding.Default.GetString(response);
+            }
+        }
     }
 }

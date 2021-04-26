@@ -104,9 +104,7 @@ namespace WotStat
         {
             var tanks = new Dictionary<string, List<string>>();
 
-            var requestParams = new NameValueCollection { };
-
-            var jsonResult = Request.PostRequest(UrlResolver.TanksMasteryListUrl(region), requestParams);
+            var jsonResult = Request.GetRequest(UrlResolver.TanksMasteryListUrl(region));
             if (String.IsNullOrEmpty(jsonResult))
             {
                 return tanks;
