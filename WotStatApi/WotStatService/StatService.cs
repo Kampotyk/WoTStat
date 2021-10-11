@@ -12,12 +12,36 @@ namespace WotStat
 {
     public static class StatService
     {
+        const string applicationId = "12845e99af9d4a7b3c734c0cbbb5ee12";
+
+        public static string OpenIdLogin(Region region)
+        {
+
+            var requestParams = new NameValueCollection
+            {
+                { "application_id", applicationId },
+                { "expires_at", "3600" },
+                { "nofollow", "1"}
+            };
+
+            var jsonResult = Request.PostRequest(UrlResolver.OpenIdLogin(region), requestParams);
+
+            if (String.IsNullOrEmpty(jsonResult))
+            {
+                return null;
+            }
+
+            dynamic result = JsonConvert.DeserializeObject<dynamic>(jsonResult);
+
+            return result.data.location;
+        }
+
         public static string GetAccountIdByName(string name, Region region)
         {
             var accountId = String.Empty;
             var requestParams = new NameValueCollection
             {
-                { "application_id", "12845e99af9d4a7b3c734c0cbbb5ee12" },
+                { "application_id", applicationId },
                 { "search", name },
                 { "limit", "1" }
             };
@@ -41,7 +65,7 @@ namespace WotStat
 
             var requestParams = new NameValueCollection
             {
-                { "application_id", "12845e99af9d4a7b3c734c0cbbb5ee12" },
+                { "application_id", applicationId },
                 { "language", "en" },
                 { "fields", "short_name, tank_id" }
             };
@@ -68,7 +92,7 @@ namespace WotStat
 
             var requestParams = new NameValueCollection
             {
-                { "application_id", "12845e99af9d4a7b3c734c0cbbb5ee12" },
+                { "application_id", applicationId },
                 { "language", "en" },
                 { "account_id", accountId }
             };

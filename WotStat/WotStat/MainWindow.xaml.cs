@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.DataVisualization.Charting;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using WotStatService.Models;
 
 namespace WotStat
 {
@@ -14,6 +15,7 @@ namespace WotStat
     public partial class MainWindow : Window
     {
         ViewModel tankViewModel = new ViewModel();
+        PrivateData UserData = null;
 
         public MainWindow()
         {
@@ -26,13 +28,15 @@ namespace WotStat
         private async void OnSearch(object sender, RoutedEventArgs e)
         {
             btnSearch.IsEnabled = false;
-            btnSearch.Content = "Search...";
+
+            var originalContent = btnSearch.Content;
+            btnSearch.Content = $"{originalContent}...";
 
             await tankViewModel.LoadPlayerTankStats(txtPlayerName.Text);
             DataContext = tankViewModel;
 
             btnSearch.IsEnabled = true;
-            btnSearch.Content = "Search";
+            btnSearch.Content = originalContent;
         }
 
         private void TextBoxValidation(object sender, TextCompositionEventArgs e)
@@ -143,6 +147,20 @@ namespace WotStat
                 }
 
                 tankViewModel.PrevSelectedNoMasterTank = tankViewModel.SelectedNoMasterTank;
+            }
+        }
+
+        private void LoginButtonClick(object sender, RoutedEventArgs e)
+        {
+            Login loginWindow = new Login();
+            loginWindow.ShowDialog();
+
+            if (!String.IsNullOrEmpty(loginWindow.UserData.Status) && loginWindow.UserData.Status.Equals("ok"))
+            {
+                UserData = new PrivateData(loginWindow.UserData);
+
+                btnLogin.IsEnabled = false;
+                btnLogin.Content = UserData.Nickname.Replace("_", "__");
             }
         }
     }

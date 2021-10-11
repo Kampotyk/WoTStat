@@ -4,14 +4,15 @@
         xmlns:DVC="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
         Title="WoT Stats" Height="600" Width="1000" ResizeMode="NoResize" Icon="Resourses/wot.jpg">
     <Grid Margin="0,0,0,0">
-        <StackPanel FocusManager.FocusedElement="{Binding ElementName=txtPlayerName}">
+        <StackPanel FocusManager.FocusedElement="{Binding ElementName=txtPlayerName}" Margin="0">
             <TextBox x:Name="txtPlayerName" HorizontalAlignment="Left" Height="22"
-                 Margin="408,38,0,0" VerticalAlignment="Top" Width="120" ToolTip="Player Nickname"
+                 Margin="387,38,0,0" VerticalAlignment="Top" Width="120" ToolTip="Player Nickname"
                  MaxLines="1" MaxLength="24" PreviewTextInput="TextBoxValidation"
                  DataObject.Pasting="TextBoxPasting" TextChanged="OnTextChanged" VerticalContentAlignment="Center"/>
         </StackPanel>
-        <Button x:Name="btnSearch" Content="Search" HorizontalAlignment="Left" Margin="545,38,0,0"
+        <Button x:Name="btnSearch" Content="Search" HorizontalAlignment="Left" Margin="531,38,0,0"
                 VerticalAlignment="Top" Width="74" IsDefault="True" Click="OnSearch" IsEnabled="False" Height="22"/>
+        <Button x:Name="btnLogin" Content="Login" Margin="0,0,20,527" Width="74" Height="22" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="LoginButtonClick"/>
         <TabControl x:Name="tabControl" HorizontalAlignment="Left" Height="491" Margin="0,80,0,0" VerticalAlignment="Top" Width="994">
             <TabItem Header="Wins To 50%">
                 <Grid Background="#FFE5E5E5">
