@@ -3,6 +3,7 @@
     public static class UrlResolver
     {
         private const string _openIdLoginUrl = "https://api.worldoftanks.{0}/wot/auth/login/";
+        private const string _logoutUrl = "https://api.worldoftanks.{0}/wot/auth/logout/";
         private const string _accountInfo = "https://api.worldoftanks.{0}/wot/account/info/";
         private const string _accountListUrl = "https://api.worldoftanks.{0}/wot/account/list/";
         private const string _tanksListUrl = "https://api.worldoftanks.{0}/wot/encyclopedia/vehicles/";
@@ -12,6 +13,10 @@
         public static string OpenIdLogin(Region region)
         {
             return string.Format(_openIdLoginUrl, region.UrlSuffix);
+        }
+        public static string LogoutUrl(Region region)
+        {
+            return string.Format(_logoutUrl, region.UrlSuffix);
         }
         public static string AccountInfo(Region region)
         {

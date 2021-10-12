@@ -14,8 +14,8 @@ namespace WotStat
     /// </summary>
     public partial class MainWindow : Window
     {
-        ViewModel tankViewModel = new ViewModel();
-        PrivateData UserData = null;
+        private ViewModel tankViewModel = new ViewModel();
+        private PrivateData userData = null;
 
         public MainWindow()
         {
@@ -32,7 +32,7 @@ namespace WotStat
             var originalContent = btnSearch.Content;
             btnSearch.Content = $"{originalContent}...";
 
-            await tankViewModel.LoadPlayerTankStats(txtPlayerName.Text);
+            await tankViewModel.LoadPlayerTankStats(txtPlayerName.Text, userData);
             DataContext = tankViewModel;
 
             btnSearch.IsEnabled = true;
@@ -152,15 +152,27 @@ namespace WotStat
 
         private void LoginButtonClick(object sender, RoutedEventArgs e)
         {
-            Login loginWindow = new Login();
-            loginWindow.ShowDialog();
-
-            if (!String.IsNullOrEmpty(loginWindow.UserData.Status) && loginWindow.UserData.Status.Equals("ok"))
+            if (userData == null)
             {
-                UserData = new PrivateData(loginWindow.UserData);
+                userData = new PrivateData();
 
-                btnLogin.IsEnabled = false;
-                btnLogin.Content = UserData.Nickname.Replace("_", "__");
+                Login loginWindow = new Login(userData);
+                loginWindow.ShowDialog();
+
+                if (!String.IsNullOrEmpty(userData.Status) && userData.Status.Equals("ok"))
+                {
+                    btnLogin.Content = "Logout";
+                    lblUsername.Content = userData.Nickname.Replace("_", "__");
+                }
+            }
+            else
+            {
+                if (StatService.Logout(userData.AccessToken, new Region { Name = "Russia", UrlSuffix = "ru" }))
+                {
+                    userData = null;
+                    btnLogin.Content = "Login";
+                    lblUsername.Content = String.Empty;
+                }
             }
         }
     }

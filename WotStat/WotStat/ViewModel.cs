@@ -1,4 +1,6 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -69,30 +71,24 @@ namespace WotStat
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public async Task<bool> LoadPlayerTankStats(string playerName)
+        public async Task<bool> LoadPlayerTankStats(string playerName, PrivateData userData)
         {
-            var allPlayerTanks = await Task.Factory.StartNew(() => StatService.GetPlayerTankStats(
-                StatService.GetAccountIdByName(playerName, defaultRegion)
-                , StatService.GetAllTanks(defaultRegion)
-                , StatService.GetAllTanksMastery(defaultRegion)
-                , defaultRegion));
+            var accountId = await Task.Factory.StartNew(() => StatService.GetAccountIdByName(playerName, defaultRegion));
 
-            WeakTanks = new ObservableCollection<TankModel>(allPlayerTanks.Where(tank => tank.WinsToDesiredPercent > 0));
-            NoMasterTanks = new ObservableCollection<TankModel>(allPlayerTanks.Where(tank => tank.Badge != Constants.Badge.Master));
+            Dictionary<string, bool> playerGarageTanks = null;
 
-            return true;
-        }
+            if (userData != null && accountId.Equals(userData.AccountId))
+            {
+                playerGarageTanks = await Task.Factory.StartNew(() => StatService.GetPlayerTanks(accountId, userData.AccessToken, defaultRegion));
+            }
 
-        public async Task<bool> LoadMyTankStats(string playerName)
-        {
-            var allPlayerTanks = await Task.Factory.StartNew(() => StatService.GetPlayerTankStats(
-                StatService.GetAccountIdByName(playerName, defaultRegion)
-                , StatService.GetAllTanks(defaultRegion)
-                , StatService.GetAllTanksMastery(defaultRegion)
-                , defaultRegion));
+            var allTanks = await Task.Factory.StartNew(() => StatService.GetAllTanks(defaultRegion));
+            var allTanksMastery = await Task.Factory.StartNew(() => StatService.GetAllTanksMastery(defaultRegion));
 
-            WeakTanks = new ObservableCollection<TankModel>(allPlayerTanks.Where(tank => tank.WinsToDesiredPercent > 0));
-            NoMasterTanks = new ObservableCollection<TankModel>(allPlayerTanks.Where(tank => tank.Badge != Constants.Badge.Master));
+            var playerTankStats = await Task.Factory.StartNew(() => StatService.GetPlayerTankStats(accountId, allTanks, allTanksMastery, playerGarageTanks, defaultRegion));
+
+            WeakTanks = new ObservableCollection<TankModel>(playerTankStats.Where(tank => tank.WinsToDesiredPercent > 0));
+            NoMasterTanks = new ObservableCollection<TankModel>(playerTankStats.Where(tank => tank.Badge != Constants.Badge.Master));
 
             return true;
         }

@@ -15,11 +15,12 @@ namespace WotStat
         const string accountId = "account_id";
         const string expiresAt = "expires_at";
 
-        public PrivateData UserData = new PrivateData();
+        private PrivateData userData = null;
 
-        public Login()
+        public Login(PrivateData privateData)
         {
             InitializeComponent();
+            userData = privateData;
         }
 
         private void WebBrowser_Navigated(object sender, System.Windows.Navigation.NavigationEventArgs e)
@@ -39,23 +40,23 @@ namespace WotStat
                     switch (key)
                     {
                         case status:
-                            UserData.Status = value;
+                            userData.Status = value;
                             break;
 
                         case accessToken:
-                            UserData.AccessToken = value;
+                            userData.AccessToken = value;
                             break;
 
                         case nickname:
-                            UserData.Nickname = value;
+                            userData.Nickname = value;
                             break;
 
                         case accountId:
-                            UserData.AccountId = value;
+                            userData.AccountId = value;
                             break;
 
                         case expiresAt:
-                            UserData.ExpiresAt = value;
+                            userData.ExpiresAt = value;
                             break;
                     }
                 }
@@ -66,9 +67,16 @@ namespace WotStat
 
         private void LoginWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            string loginPage = StatService.OpenIdLogin(new WotStatService.Models.Region { Name = "Russia", UrlSuffix = "ru" });
-            webBrowser.Visibility = Visibility.Visible;
-            webBrowser.Navigate(loginPage);
+            string address = StatService.OpenIdLogin(new Region { Name = "Russia", UrlSuffix = "ru" });
+            if (address != null)
+            {
+                webBrowser.Visibility = Visibility.Visible;
+                webBrowser.Navigate(address);
+            }
+            else
+            {
+                DialogResult = false;
+            }
         }
     }
 }
