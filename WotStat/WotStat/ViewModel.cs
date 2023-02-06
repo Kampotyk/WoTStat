@@ -17,8 +17,6 @@ namespace WotStat
         private ObservableCollection<TankModel> noMasterTanks;
         private TankModel selectedNoMasterTank;
 
-        private Region defaultRegion = new Region { Name = "Russia", UrlSuffix = "ru" };
-
         public ObservableCollection<TankModel> WeakTanks
         {
             get => weakTanks;
@@ -73,19 +71,19 @@ namespace WotStat
 
         public async Task<bool> LoadPlayerTankStats(string playerName, PrivateData userData)
         {
-            var accountId = await Task.Factory.StartNew(() => StatService.GetAccountIdByName(playerName, defaultRegion));
+            var accountId = await Task.Factory.StartNew(() => StatService.GetAccountIdByName(playerName));
 
             Dictionary<string, bool> playerGarageTanks = null;
 
             if (userData != null && accountId.Equals(userData.AccountId))
             {
-                playerGarageTanks = await Task.Factory.StartNew(() => StatService.GetPlayerTanks(accountId, userData.AccessToken, defaultRegion));
+                playerGarageTanks = await Task.Factory.StartNew(() => StatService.GetPlayerTanks(accountId, userData.AccessToken));
             }
 
-            var allTanks = await Task.Factory.StartNew(() => StatService.GetAllTanks(defaultRegion));
-            var allTanksMastery = await Task.Factory.StartNew(() => StatService.GetAllTanksMastery(defaultRegion));
+            var allTanks = await Task.Factory.StartNew(() => StatService.GetAllTanks());
+            var allTanksMastery = await Task.Factory.StartNew(() => StatService.GetAllTanksMastery());
 
-            var playerTankStats = await Task.Factory.StartNew(() => StatService.GetPlayerTankStats(accountId, allTanks, allTanksMastery, playerGarageTanks, defaultRegion));
+            var playerTankStats = await Task.Factory.StartNew(() => StatService.GetPlayerTankStats(accountId, allTanks, allTanksMastery, playerGarageTanks));
 
             WeakTanks = new ObservableCollection<TankModel>(playerTankStats.Where(tank => tank.WinsToDesiredPercent > 0));
             NoMasterTanks = new ObservableCollection<TankModel>(playerTankStats.Where(tank => tank.Badge != Constants.Badge.Master));

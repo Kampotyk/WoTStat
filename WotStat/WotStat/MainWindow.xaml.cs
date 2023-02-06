@@ -167,7 +167,7 @@ namespace WotStat
             }
             else
             {
-                if (StatService.Logout(userData.AccessToken, new Region { Name = "Russia", UrlSuffix = "ru" }))
+                if (StatService.Logout(userData.AccessToken))
                 {
                     userData = null;
                     btnLogin.Content = "Login";

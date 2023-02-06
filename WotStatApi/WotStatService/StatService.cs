@@ -12,9 +12,10 @@ namespace WotStat
 {
     public static class StatService
     {
-        const string applicationId = "12845e99af9d4a7b3c734c0cbbb5ee12";
+        static readonly string applicationId = "f28611677e24bcfeb2b1c92bc689076e";
+        static readonly Region defaultRegion = new Region { Name = "Europe", UrlSuffix = "eu" };
 
-        public static string OpenIdLogin(Region region)
+        public static string OpenIdLogin(Region region = null)
         {
             string address = null;
 
@@ -25,7 +26,7 @@ namespace WotStat
                 { "nofollow", "1"}
             };
 
-            var jsonResult = Request.PostRequest(UrlResolver.OpenIdLogin(region), requestParams);
+            var jsonResult = Request.PostRequest(UrlResolver.OpenIdLogin(region ?? defaultRegion), requestParams);
 
             if (String.IsNullOrEmpty(jsonResult))
             {
@@ -41,7 +42,7 @@ namespace WotStat
             return address;
         }
 
-        public static bool Logout(string accessToken, Region region)
+        public static bool Logout(string accessToken, Region region = null)
         {
             var requestParams = new NameValueCollection
             {
@@ -49,7 +50,7 @@ namespace WotStat
                 { "access_token", accessToken }
             };
 
-            var jsonResult = Request.PostRequest(UrlResolver.LogoutUrl(region), requestParams);
+            var jsonResult = Request.PostRequest(UrlResolver.LogoutUrl(region ?? defaultRegion), requestParams);
 
             if (String.IsNullOrEmpty(jsonResult))
             {
@@ -65,7 +66,7 @@ namespace WotStat
             return false;
         }
 
-        public static string GetAccountIdByName(string name, Region region)
+        public static string GetAccountIdByName(string name, Region region = null)
         {
             string accountId = null;
 
@@ -76,7 +77,7 @@ namespace WotStat
                 { "limit", "1" }
             };
 
-            var jsonResult = Request.PostRequest(UrlResolver.AccountListUrl(region), requestParams);
+            var jsonResult = Request.PostRequest(UrlResolver.AccountListUrl(region ?? defaultRegion), requestParams);
 
             if (String.IsNullOrEmpty(jsonResult))
             {
@@ -92,7 +93,7 @@ namespace WotStat
             return accountId;
         }
 
-        public static Dictionary<string, bool> GetPlayerTanks(string accountId, string accessToken, Region region)
+        public static Dictionary<string, bool> GetPlayerTanks(string accountId, string accessToken, Region region = null)
         {
             var tanks = new Dictionary<string, bool>();
 
@@ -106,7 +107,7 @@ namespace WotStat
                 { "language", "en" }
             };
 
-            var jsonResult = Request.PostRequest(UrlResolver.AccountInfo(region), requestParams);
+            var jsonResult = Request.PostRequest(UrlResolver.AccountInfo(region ?? defaultRegion), requestParams);
             if (String.IsNullOrEmpty(jsonResult))
             {
                 return tanks;
@@ -137,7 +138,7 @@ namespace WotStat
             return tanks;
         }
 
-        public static Dictionary<string, string> GetAllTanks(Region region)
+        public static Dictionary<string, string> GetAllTanks(Region region = null)
         {
             var tanks = new Dictionary<string, string>();
 
@@ -148,7 +149,7 @@ namespace WotStat
                 { "language", "en" }
             };
 
-            var jsonResult = Request.PostRequest(UrlResolver.TanksListUrl(region), requestParams);
+            var jsonResult = Request.PostRequest(UrlResolver.TanksListUrl(region ?? defaultRegion), requestParams);
             if (String.IsNullOrEmpty(jsonResult))
             {
                 return tanks;
@@ -170,7 +171,7 @@ namespace WotStat
                                                          Dictionary<string, string> tanks,
                                                          Dictionary<string, List<string>> tanksMastery,
                                                          Dictionary<string, bool> playerGarageTanks,
-                                                         Region region)
+                                                         Region region = null)
         {
             var playerTanks = new List<TankModel>();
 
@@ -181,7 +182,7 @@ namespace WotStat
                 { "language", "en" }
             };
 
-            var jsonResult = Request.PostRequest(UrlResolver.PlayersTanksUrl(region), requestParams);
+            var jsonResult = Request.PostRequest(UrlResolver.PlayersTanksUrl(region ?? defaultRegion), requestParams);
 
             if (String.IsNullOrEmpty(jsonResult))
             {
@@ -234,11 +235,11 @@ namespace WotStat
             return playerTanks;
         }
 
-        public static Dictionary<string, List<string>> GetAllTanksMastery(Region region)
+        public static Dictionary<string, List<string>> GetAllTanksMastery(Region region = null)
         {
             var tanks = new Dictionary<string, List<string>>();
 
-            var jsonResult = Request.GetRequest(UrlResolver.TanksMasteryListUrl(region));
+            var jsonResult = Request.GetRequest(UrlResolver.TanksMasteryListUrl(region ?? defaultRegion));
             if (String.IsNullOrEmpty(jsonResult))
             {
                 return tanks;

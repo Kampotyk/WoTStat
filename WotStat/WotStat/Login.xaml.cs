@@ -67,7 +67,7 @@ namespace WotStat
 
         private void LoginWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            string address = StatService.OpenIdLogin(new Region { Name = "Russia", UrlSuffix = "ru" });
+            string address = StatService.OpenIdLogin();
             if (address != null)
             {
                 webBrowser.Visibility = Visibility.Visible;
