@@ -3,6 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:DVC="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
         Title="WoT Stats" Height="600" Width="1000" ResizeMode="NoResize" Icon="Resourses/wot.jpg">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </Window.Resources>
     <Grid Margin="0,0,0,0">
         <StackPanel FocusManager.FocusedElement="{Binding ElementName=txtPlayerName}" Margin="0">
             <TextBox x:Name="txtPlayerName" HorizontalAlignment="Left" Height="22"
@@ -56,6 +59,11 @@
                             </DataTemplate>
                         </DataGrid.RowDetailsTemplate>
                     </DataGrid>
+                    <TextBlock x:Name="txtNoVehiclesWithLowStat"
+                               Text="No vehicles with win ratio less than 50%"
+                               Visibility="{Binding Items.IsEmpty, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=grdStats}"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center" />
                 </Grid>
             </TabItem>
             <TabItem Header="No Master">
@@ -98,6 +106,11 @@
                             </DataTemplate>
                         </DataGrid.RowDetailsTemplate>
                     </DataGrid>
+                    <TextBlock x:Name="txtNoVehiclesWithNoMaster"
+                               Text="No vehicles without master badge"
+                               Visibility="{Binding Items.IsEmpty, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=grdMastery}"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center" />
                 </Grid>
             </TabItem>
         </TabControl>

@@ -23,6 +23,7 @@ namespace WotStat
             DataContext = tankViewModel;
             grdStats.RowDetailsVisibilityChanged += StatsRowDetailsVisibilityChanged;
             grdMastery.RowDetailsVisibilityChanged += MasteryRowDetailsVisibilityChanged;
+            tabControl.Visibility = Visibility.Hidden;
         }
 
         private async void OnSearch(object sender, RoutedEventArgs e)
@@ -37,6 +38,11 @@ namespace WotStat
 
             btnSearch.IsEnabled = true;
             btnSearch.Content = originalContent;
+
+            if (tabControl.Visibility != Visibility.Visible)
+            {
+                tabControl.Visibility = Visibility.Visible;
+            }
         }
 
         private void TextBoxValidation(object sender, TextCompositionEventArgs e)

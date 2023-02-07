@@ -85,7 +85,7 @@ namespace WotStat
             }
 
             dynamic result = JsonConvert.DeserializeObject<dynamic>(jsonResult);
-            if (result.status.Value.Equals("ok"))
+            if (result.status.Value.Equals("ok") && result.data.Count != 0)
             {
                 accountId = result.data.Last.account_id;
             }
