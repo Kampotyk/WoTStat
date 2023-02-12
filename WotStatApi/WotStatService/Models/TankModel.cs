@@ -10,6 +10,8 @@ namespace WotStat.Models
         public double WinRatio { get; set; }
         public long WinsToDesiredPercent { get; set; }
         public Constants.Badge Badge { get; set; }
-        public List<string> Mastery { get; set; }
+        public int GunMarks { get; set; }
+        public List<string> MasteryStats { get; set; }
+        public List<KeyValuePair<string,string>> GunMarksStats { get; set; }
     }
 }

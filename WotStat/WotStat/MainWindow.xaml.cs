@@ -23,6 +23,7 @@ namespace WotStat
             DataContext = tankViewModel;
             grdStats.RowDetailsVisibilityChanged += StatsRowDetailsVisibilityChanged;
             grdMastery.RowDetailsVisibilityChanged += MasteryRowDetailsVisibilityChanged;
+            grdGunMarks.RowDetailsVisibilityChanged += GunMarksRowDetailsVisibilityChanged;
             tabControl.Visibility = Visibility.Hidden;
         }
 
@@ -100,6 +101,16 @@ namespace WotStat
             }
         }
 
+        private void GunMarksRowDetailsVisibilityChanged(object sender, DataGridRowDetailsEventArgs e)
+        {
+            if (e.DetailsElement is Chart gunMarksChart && gunMarksChart.IsVisible)
+            {
+                var columntSeries = (ColumnSeries)gunMarksChart.Series[0];
+                columntSeries.ItemsSource = StatService.GunMarksGetChartData(tankViewModel.SelectedGunMarksTank);
+                columntSeries.Title = "Gun Marks";
+            }
+        }
+
         private void WinTanksDataGridMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             if (e.Source.GetType() == typeof(DataGridCellsPresenter))
@@ -153,6 +164,34 @@ namespace WotStat
                 }
 
                 tankViewModel.PrevSelectedNoMasterTank = tankViewModel.SelectedNoMasterTank;
+            }
+        }
+
+        private void GunMarksTanksDataGridMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (e.Source.GetType() == typeof(DataGridCellsPresenter))
+            {
+                if (sender is DataGridRow row)
+                {
+                    var dataitem = row.DataContext;
+                    var visibility = grdGunMarks.GetDetailsVisibilityForItem(dataitem);
+
+                    if (tankViewModel.PrevSelectedGunMarksTank != null && grdGunMarks.GetDetailsVisibilityForItem(tankViewModel.PrevSelectedGunMarksTank) == Visibility.Visible)
+                    {
+                        grdGunMarks.SetDetailsVisibilityForItem(tankViewModel.PrevSelectedGunMarksTank, Visibility.Collapsed);
+                    }
+
+                    if (row.IsSelected && visibility == Visibility.Visible)
+                    {
+                        grdGunMarks.SetDetailsVisibilityForItem(dataitem, Visibility.Collapsed);
+                    }
+                    else
+                    {
+                        grdGunMarks.SetDetailsVisibilityForItem(dataitem, Visibility.Visible);
+                    }
+                }
+
+                tankViewModel.PrevSelectedGunMarksTank = tankViewModel.SelectedGunMarksTank;
             }
         }
 

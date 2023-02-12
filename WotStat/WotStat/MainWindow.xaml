@@ -113,6 +113,52 @@
                                VerticalAlignment="Center" />
                 </Grid>
             </TabItem>
+            <TabItem Header="Gun Marks">
+                <Grid Background="#FFE5E5E5">
+                    <DataGrid x:Name="grdGunMarks"
+                        AutoGenerateColumns="False" ItemsSource="{Binding GunMarksTanks}"
+                        SelectedItem="{Binding SelectedGunMarksTank}" SelectionMode="Single" SelectionUnit="FullRow"
+                        IsReadOnly="True" CanUserAddRows="False" RowDetailsVisibilityMode="Collapsed" Margin="3">
+                        <DataGrid.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="BorderThickness" Value="0"/>
+                                <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                            </Style>
+                        </DataGrid.CellStyle>
+                        <DataGrid.ItemContainerStyle>
+                            <Style TargetType="{x:Type DataGridRow}">
+                                <EventSetter Event="UIElement.MouseUp" Handler="GunMarksTanksDataGridMouseLeftButtonUp"/>
+                            </Style>
+                        </DataGrid.ItemContainerStyle>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Tank Name" Binding="{Binding Name}" Width="0.4*"/>
+                            <DataGridTextColumn Header="Badge" Binding="{Binding Badge}" Width="0.3*"/>
+                            <DataGridTextColumn Header="Gun Marks" Binding="{Binding GunMarks}" Width="0.3*"/>
+                        </DataGrid.Columns>
+                        <DataGrid.RowDetailsTemplate>
+                            <DataTemplate>
+                                <DVC:Chart x:Name="gunMarksChart"
+                                    Width="700" Height="300"
+                                    Background="LightSteelBlue">
+                                    <DVC:Chart.Axes>
+                                        <DVC:CategoryAxis Orientation="X"/>
+                                        <DVC:LinearAxis Orientation="Y" ShowGridLines="True" Title="Damage"/>
+                                    </DVC:Chart.Axes>
+                                    <DVC:ColumnSeries
+                                        ItemsSource="{Binding}"
+                                        IndependentValueBinding="{Binding Key}"
+                                        DependentValueBinding="{Binding Value}"/>
+                                </DVC:Chart>
+                            </DataTemplate>
+                        </DataGrid.RowDetailsTemplate>
+                    </DataGrid>
+                    <TextBlock x:Name="txtNoVehiclesWithGunMarks"
+                               Text="No vehicles with gun marks"
+                               Visibility="{Binding Items.IsEmpty, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=grdGunMarks}"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center" />
+                </Grid>
+            </TabItem>
         </TabControl>
     </Grid>
 </Window>
