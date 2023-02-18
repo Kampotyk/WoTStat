@@ -213,6 +213,17 @@
   <ItemGroup>
     <Resource Include="Resourses\wot.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resourses\first.png" />
+    <Resource Include="Resourses\master.png" />
+    <Resource Include="Resourses\second.png" />
+    <Resource Include="Resourses\third.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resourses\one_star.png" />
+    <Resource Include="Resourses\three_stars.png" />
+    <Resource Include="Resourses\two_stars.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

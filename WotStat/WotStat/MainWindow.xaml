@@ -36,11 +36,17 @@
                             </Style>
                         </DataGrid.ItemContainerStyle>
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Tank Name" Binding="{Binding Name}" Width="0.2*"/>
-                            <DataGridTextColumn Header="Battles" Binding="{Binding BattleCount}" Width="0.2*"/>
-                            <DataGridTextColumn Header="Wins" Binding="{Binding WinRatio}" Width="0.2*"/>
-                            <DataGridTextColumn Header="Wins To 50%" Binding="{Binding WinsToDesiredPercent}" Width="0.2*"/>
-                            <DataGridTextColumn Header="Badge" Binding="{Binding Badge}" Width="0.2*"/>
+                            <DataGridTextColumn Header="Tank Name" Binding="{Binding Name}" Width="0.4*"/>
+                            <DataGridTextColumn Header="Battles" Binding="{Binding BattleCount}" Width="0.15*"/>
+                            <DataGridTextColumn Header="Wins" Binding="{Binding WinRatio}" Width="0.15*"/>
+                            <DataGridTextColumn Header="Wins To 50%" Binding="{Binding WinsToDesiredPercent}" Width="0.15*"/>
+                            <DataGridTemplateColumn Header="Badge" Width="0.15*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Image Height="25" Source="{Binding BadgeIcon}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
                         </DataGrid.Columns>
                         <DataGrid.RowDetailsTemplate>
                             <DataTemplate>
@@ -87,7 +93,13 @@
                             <DataGridTextColumn Header="Tank Name" Binding="{Binding Name}" Width="0.4*"/>
                             <DataGridTextColumn Header="Battles" Binding="{Binding BattleCount}" Width="0.2*"/>
                             <DataGridTextColumn Header="Wins" Binding="{Binding WinRatio}" Width="0.2*"/>
-                            <DataGridTextColumn Header="Badge" Binding="{Binding Badge}" Width="0.2*"/>
+                            <DataGridTemplateColumn Header="Badge" Width="0.2*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Image Height="25" Source="{Binding BadgeIcon}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
                         </DataGrid.Columns>
                         <DataGrid.RowDetailsTemplate>
                             <DataTemplate>
@@ -132,8 +144,20 @@
                         </DataGrid.ItemContainerStyle>
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Tank Name" Binding="{Binding Name}" Width="0.4*"/>
-                            <DataGridTextColumn Header="Badge" Binding="{Binding Badge}" Width="0.3*"/>
-                            <DataGridTextColumn Header="Gun Marks" Binding="{Binding GunMarks}" Width="0.3*"/>
+                            <DataGridTemplateColumn Header="Badge" Width="0.3*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Image Height="25" Source="{Binding BadgeIcon}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Gun Marks" Width="0.3*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Image Height="20" Source="{Binding GunMarksIcon}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
                         </DataGrid.Columns>
                         <DataGrid.RowDetailsTemplate>
                             <DataTemplate>
