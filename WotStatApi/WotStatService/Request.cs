@@ -11,7 +11,7 @@ namespace WotStat
             using (var client = new WebClient())
             {
                 var response = client.UploadValues(url, values);
-                return Encoding.Default.GetString(response);
+                return Encoding.UTF8.GetString(response);
             }
         }
 
@@ -20,7 +20,7 @@ namespace WotStat
             using (var client = new WebClient())
             {
                 var response = client.DownloadData(url);
-                return Encoding.Default.GetString(response);
+                return Encoding.UTF8.GetString(response);
             }
         }
     }

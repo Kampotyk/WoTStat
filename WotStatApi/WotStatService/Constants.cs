@@ -19,7 +19,7 @@ namespace WotStat
 
         public static Dictionary<Badge, string> BadgeIcons = new Dictionary<Badge, string>
         {
-            { Badge.None, null },
+            { Badge.None, @"Resourses\empty.png" },
             { Badge.Third, @"Resourses\third.png" },
             { Badge.Second, @"Resourses\second.png" },
             { Badge.First, @"Resourses\first.png" },
@@ -28,7 +28,7 @@ namespace WotStat
 
         public static Dictionary<int, string> GunMarksIcons = new Dictionary<int, string>
         {
-            { 0, null },
+            { 0, @"Resourses\empty.png" },
             { 1, @"Resourses\one_star.png" },
             { 2, @"Resourses\two_stars.png" },
             { 3, @"Resourses\three_stars.png" }
