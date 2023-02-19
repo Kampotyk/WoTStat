@@ -209,6 +209,10 @@ namespace WotStat
                     btnLogin.Content = "Logout";
                     lblUsername.Content = userData.Nickname.Replace("_", "__");
                 }
+                else
+                {
+                    userData = null;
+                }
             }
             else
             {
