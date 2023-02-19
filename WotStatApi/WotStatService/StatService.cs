@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -7,14 +8,17 @@ using System.Linq;
 using WotStat.Extensions;
 using WotStat.Models;
 using WotStatService.Models;
+using static System.Net.Mime.MediaTypeNames;
+using static WotStat.Constants;
 
 namespace WotStat
 {
     public static class StatService
     {
-        const string applicationId = "12845e99af9d4a7b3c734c0cbbb5ee12";
+        static readonly string applicationId = "f28611677e24bcfeb2b1c92bc689076e";
+        static readonly Region defaultRegion = new Region { Name = "Europe", UrlSuffix = "eu" };
 
-        public static string OpenIdLogin(Region region)
+        public static string OpenIdLogin(Region region = null)
         {
             string address = null;
 
@@ -25,7 +29,7 @@ namespace WotStat
                 { "nofollow", "1"}
             };
 
-            var jsonResult = Request.PostRequest(UrlResolver.OpenIdLogin(region), requestParams);
+            var jsonResult = Request.PostRequest(UrlResolver.OpenIdLogin(region ?? defaultRegion), requestParams);
 
             if (String.IsNullOrEmpty(jsonResult))
             {
@@ -41,7 +45,7 @@ namespace WotStat
             return address;
         }
 
-        public static bool Logout(string accessToken, Region region)
+        public static bool Logout(string accessToken, Region region = null)
         {
             var requestParams = new NameValueCollection
             {
@@ -49,7 +53,7 @@ namespace WotStat
                 { "access_token", accessToken }
             };
 
-            var jsonResult = Request.PostRequest(UrlResolver.LogoutUrl(region), requestParams);
+            var jsonResult = Request.PostRequest(UrlResolver.LogoutUrl(region ?? defaultRegion), requestParams);
 
             if (String.IsNullOrEmpty(jsonResult))
             {
@@ -65,7 +69,7 @@ namespace WotStat
             return false;
         }
 
-        public static string GetAccountIdByName(string name, Region region)
+        public static string GetAccountIdByName(string name, Region region = null)
         {
             string accountId = null;
 
@@ -76,7 +80,7 @@ namespace WotStat
                 { "limit", "1" }
             };
 
-            var jsonResult = Request.PostRequest(UrlResolver.AccountListUrl(region), requestParams);
+            var jsonResult = Request.PostRequest(UrlResolver.AccountListUrl(region ?? defaultRegion), requestParams);
 
             if (String.IsNullOrEmpty(jsonResult))
             {
@@ -84,7 +88,7 @@ namespace WotStat
             }
 
             dynamic result = JsonConvert.DeserializeObject<dynamic>(jsonResult);
-            if (result.status.Value.Equals("ok"))
+            if (result.status.Value.Equals("ok") && result.data.Count != 0)
             {
                 accountId = result.data.Last.account_id;
             }
@@ -92,7 +96,7 @@ namespace WotStat
             return accountId;
         }
 
-        public static Dictionary<string, bool> GetPlayerTanks(string accountId, string accessToken, Region region)
+        public static Dictionary<string, bool> GetPlayerTanks(string accountId, string accessToken, Region region = null)
         {
             var tanks = new Dictionary<string, bool>();
 
@@ -106,7 +110,7 @@ namespace WotStat
                 { "language", "en" }
             };
 
-            var jsonResult = Request.PostRequest(UrlResolver.AccountInfo(region), requestParams);
+            var jsonResult = Request.PostRequest(UrlResolver.AccountInfo(region ?? defaultRegion), requestParams);
             if (String.IsNullOrEmpty(jsonResult))
             {
                 return tanks;
@@ -137,7 +141,7 @@ namespace WotStat
             return tanks;
         }
 
-        public static Dictionary<string, string> GetAllTanks(Region region)
+        public static Dictionary<string, string> GetAllTanks(Region region = null)
         {
             var tanks = new Dictionary<string, string>();
 
@@ -148,7 +152,7 @@ namespace WotStat
                 { "language", "en" }
             };
 
-            var jsonResult = Request.PostRequest(UrlResolver.TanksListUrl(region), requestParams);
+            var jsonResult = Request.PostRequest(UrlResolver.TanksListUrl(region ?? defaultRegion), requestParams);
             if (String.IsNullOrEmpty(jsonResult))
             {
                 return tanks;
@@ -166,11 +170,11 @@ namespace WotStat
             return tanks;
         }
 
-        public static List<TankModel> GetPlayerTankStats(string accountId,
-                                                         Dictionary<string, string> tanks,
-                                                         Dictionary<string, List<string>> tanksMastery,
-                                                         Dictionary<string, bool> playerGarageTanks,
-                                                         Region region)
+        public static List<TankModel> GetPlayerTanksStats(string accountId,
+                                                          Dictionary<string, string> tanks,
+                                                          Dictionary<string, List<string>> tanksMasteryStats,
+                                                          Dictionary<string, bool> playerGarageTanks,
+                                                          Region region = null)
         {
             var playerTanks = new List<TankModel>();
 
@@ -181,7 +185,7 @@ namespace WotStat
                 { "language", "en" }
             };
 
-            var jsonResult = Request.PostRequest(UrlResolver.PlayersTanksUrl(region), requestParams);
+            var jsonResult = Request.PostRequest(UrlResolver.PlayersTanksUrl(region ?? defaultRegion), requestParams);
 
             if (String.IsNullOrEmpty(jsonResult))
             {
@@ -200,9 +204,10 @@ namespace WotStat
                             var battles = tank.statistics.battles.Value;
                             var wins = tank.statistics.wins.Value;
                             var badge = (Constants.Badge)tank.mark_of_mastery.Value;
-                            tanksMastery.TryGetValue(tank.tank_id.ToString(), out List<string> mastery);
+                            tanksMasteryStats.TryGetValue(tank.tank_id.ToString(), out List<string> masteryStats);
 
-                            var tankModel = TankExtensions.Create(tankName, battles, wins, badge, mastery);
+                            var tankModel = TankExtensions.Create(tankName, battles, wins, badge);
+                            tankModel.MasteryStats = masteryStats;
                             playerTanks.Add(tankModel);
 
                             if (playerGarageTanks != null && playerGarageTanks.ContainsKey(tank.tank_id.ToString()))
@@ -223,9 +228,10 @@ namespace WotStat
                             {
                                 tankName = $"{tankName} (Rent)";
                             }
-                            tanksMastery.TryGetValue(tank.Key, out List<string> mastery);
+                            tanksMasteryStats.TryGetValue(tank.Key, out List<string> masteryStats);
 
-                            var tankModel = TankExtensions.Create(tankName, 0, 0, Constants.Badge.None, mastery);
+                            var tankModel = TankExtensions.Create(tankName, 0, 0, Constants.Badge.None);
+                            tankModel.MasteryStats = masteryStats;
                             playerTanks.Add(tankModel);
                         }
                     }
@@ -234,11 +240,58 @@ namespace WotStat
             return playerTanks;
         }
 
-        public static Dictionary<string, List<string>> GetAllTanksMastery(Region region)
+        public static List<TankModel> GetPlayerTanksAchievements(string accountId,
+                                                                 Dictionary<string, string> tanks,
+                                                                 Dictionary<string, List<KeyValuePair<string, string>>> tanksGunMarksStats,
+                                                                 Region region = null)
+        {
+            var playerTankAchievements = new List<TankModel>();
+
+            var requestParams = new NameValueCollection
+            {
+                { "application_id", applicationId },
+                { "account_id", accountId },
+                { "fields", "achievements, tank_id" },
+                { "language", "en" }
+            };
+
+            var jsonResult = Request.PostRequest(UrlResolver.PlayerTanksAchievementsUrl(region ?? defaultRegion), requestParams);
+
+            if (String.IsNullOrEmpty(jsonResult))
+            {
+                return playerTankAchievements;
+            }
+
+            dynamic result = JsonConvert.DeserializeObject<dynamic>(jsonResult);
+            if (result.status.Value.Equals("ok"))
+            {
+                foreach (dynamic player in result.data)
+                {
+                    foreach (dynamic tank in player.Value)
+                    {
+                        if (tanks.TryGetValue(tank.tank_id.ToString(), out string tankName))
+                        {
+                            var badge = tank.achievements?.markOfMastery?.Value ?? 0;
+                            var gunMarks = tank.achievements?.marksOnGun?.Value ?? 0;
+
+                            tanksGunMarksStats.TryGetValue(tank.tank_id.ToString(), out List<KeyValuePair<string, string>> tankGunMarksStats);
+
+                            var tankModel = TankExtensions.Create(tankName, 0, 0, (Constants.Badge)badge);
+                            tankModel.GunMarks = (int)gunMarks;
+                            tankModel.GunMarksStats = tankGunMarksStats;
+                            playerTankAchievements.Add(tankModel);
+                        }
+                    }
+                }
+            }
+            return playerTankAchievements;
+        }
+
+        public static Dictionary<string, List<string>> GetAllTanksMasteryStats(Region region = null)
         {
             var tanks = new Dictionary<string, List<string>>();
 
-            var jsonResult = Request.GetRequest(UrlResolver.TanksMasteryListUrl(region));
+            var jsonResult = Request.GetRequest(UrlResolver.TanksMasteryListUrl(region ?? defaultRegion));
             if (String.IsNullOrEmpty(jsonResult))
             {
                 return tanks;
@@ -255,6 +308,32 @@ namespace WotStat
                         mastery.Add(value.ToString());
                     }
                     tanks.Add(tank.id.ToString(), mastery);
+                }
+            }
+            return tanks;
+        }
+
+        public static Dictionary<string, List<KeyValuePair<string, string>>> GetAllTanksGunMarksStats(Region region = null)
+        {
+            var tanks = new Dictionary<string, List<KeyValuePair<string, string>>>();
+
+            var jsonResult = Request.GetRequest(UrlResolver.TanksGunMarksListUrl(region ?? defaultRegion));
+            if (String.IsNullOrEmpty(jsonResult))
+            {
+                return tanks;
+            }
+
+            dynamic result = JsonConvert.DeserializeObject<dynamic>(jsonResult);
+            if (result.status.Value.Equals("ok"))
+            {
+                foreach (dynamic tank in result.data)
+                {
+                    var marks = new List<KeyValuePair<string, string>>();
+                    foreach (dynamic mark in tank.marks)
+                    {
+                        marks.Add(new KeyValuePair<string, string>(mark.Name.ToString(), mark.Value.ToString()));
+                    }
+                    tanks.Add(tank.id.ToString(), marks);
                 }
             }
             return tanks;
@@ -278,7 +357,7 @@ namespace WotStat
         }
 
         public static ObservableCollection<KeyValuePair<string, int>> MasteryGetChartData(TankModel tank)
-             => MasteryGetChartData(tank.Mastery);
+             => MasteryGetChartData(tank.MasteryStats);
 
         public static ObservableCollection<KeyValuePair<string, int>> MasteryGetChartData(List<string> mastery)
         {
@@ -290,6 +369,20 @@ namespace WotStat
             for (var badge = Constants.Badge.Third; badge <= Constants.Badge.Master; badge++, i++)
             {
                 chartData.Add(new KeyValuePair<string, int>(Enum.GetName(typeof(Constants.Badge), badge), sortedList[i]));
+            }
+            return new ObservableCollection<KeyValuePair<string, int>>(chartData);
+        }
+
+        public static ObservableCollection<KeyValuePair<string, int>> GunMarksGetChartData(TankModel tank)
+            => GunMarksGetChartData(tank.GunMarksStats);
+
+        public static ObservableCollection<KeyValuePair<string, int>> GunMarksGetChartData(List<KeyValuePair<string, string>> gunMarks)
+        {
+            var chartData = new List<KeyValuePair<string, int>>();
+
+            foreach(var gunMark in gunMarks)
+            {
+                chartData.Add(new KeyValuePair<string, int>(gunMark.Key, int.Parse(gunMark.Value)));
             }
             return new ObservableCollection<KeyValuePair<string, int>>(chartData);
         }

@@ -23,6 +23,8 @@ namespace WotStat
             DataContext = tankViewModel;
             grdStats.RowDetailsVisibilityChanged += StatsRowDetailsVisibilityChanged;
             grdMastery.RowDetailsVisibilityChanged += MasteryRowDetailsVisibilityChanged;
+            grdGunMarks.RowDetailsVisibilityChanged += GunMarksRowDetailsVisibilityChanged;
+            tabControl.Visibility = Visibility.Hidden;
         }
 
         private async void OnSearch(object sender, RoutedEventArgs e)
@@ -37,6 +39,11 @@ namespace WotStat
 
             btnSearch.IsEnabled = true;
             btnSearch.Content = originalContent;
+
+            if (tabControl.Visibility != Visibility.Visible)
+            {
+                tabControl.Visibility = Visibility.Visible;
+            }
         }
 
         private void TextBoxValidation(object sender, TextCompositionEventArgs e)
@@ -91,6 +98,16 @@ namespace WotStat
                 var columntSeries = (ColumnSeries)masteryChart.Series[0];
                 columntSeries.ItemsSource = StatService.MasteryGetChartData(tankViewModel.SelectedNoMasterTank);
                 columntSeries.Title = "Mastery";
+            }
+        }
+
+        private void GunMarksRowDetailsVisibilityChanged(object sender, DataGridRowDetailsEventArgs e)
+        {
+            if (e.DetailsElement is Chart gunMarksChart && gunMarksChart.IsVisible)
+            {
+                var columntSeries = (ColumnSeries)gunMarksChart.Series[0];
+                columntSeries.ItemsSource = StatService.GunMarksGetChartData(tankViewModel.SelectedGunMarksTank);
+                columntSeries.Title = "Gun Marks";
             }
         }
 
@@ -150,6 +167,34 @@ namespace WotStat
             }
         }
 
+        private void GunMarksTanksDataGridMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (e.Source.GetType() == typeof(DataGridCellsPresenter))
+            {
+                if (sender is DataGridRow row)
+                {
+                    var dataitem = row.DataContext;
+                    var visibility = grdGunMarks.GetDetailsVisibilityForItem(dataitem);
+
+                    if (tankViewModel.PrevSelectedGunMarksTank != null && grdGunMarks.GetDetailsVisibilityForItem(tankViewModel.PrevSelectedGunMarksTank) == Visibility.Visible)
+                    {
+                        grdGunMarks.SetDetailsVisibilityForItem(tankViewModel.PrevSelectedGunMarksTank, Visibility.Collapsed);
+                    }
+
+                    if (row.IsSelected && visibility == Visibility.Visible)
+                    {
+                        grdGunMarks.SetDetailsVisibilityForItem(dataitem, Visibility.Collapsed);
+                    }
+                    else
+                    {
+                        grdGunMarks.SetDetailsVisibilityForItem(dataitem, Visibility.Visible);
+                    }
+                }
+
+                tankViewModel.PrevSelectedGunMarksTank = tankViewModel.SelectedGunMarksTank;
+            }
+        }
+
         private void LoginButtonClick(object sender, RoutedEventArgs e)
         {
             if (userData == null)
@@ -167,7 +212,7 @@ namespace WotStat
             }
             else
             {
-                if (StatService.Logout(userData.AccessToken, new Region { Name = "Russia", UrlSuffix = "ru" }))
+                if (StatService.Logout(userData.AccessToken))
                 {
                     userData = null;
                     btnLogin.Content = "Login";

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Product Id="*"
+             Name="WoT Statistics"
+             Language="1033"
+             Version="1.0.0.0"
+             Manufacturer="Doctor_John"
+             UpgradeCode="34034a8f-1603-4757-81c2-5e43ee7d4b01">
+
+        <Package InstallerVersion="301"
+                 Compressed="yes"
+                 InstallScope="perMachine"
+                 Description="WoT Statistics"/>
+
+        <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+        <MediaTemplate />
+
+        <WixVariable Id="WixUILicenseRtf" Value="Resources\license.rtf" />
+        <WixVariable Id="WixUIBannerBmp" Value="Resources\Banner.bmp" />
+        <WixVariable Id="WixUIDialogBmp" Value="Resources\Dialog.bmp" />
+
+        <Feature Id="ProductFeature" Title="WoT Statistics" Level="1">
+            <ComponentGroupRef Id="ProductComponents" />
+            <ComponentRef Id="ApplicationShortcutDesktop"/>
+            <ComponentRef Id="RegistryEntry" />
+        </Feature>
+
+        <DirectoryRef Id="TARGETDIR">
+            <Component Id="RegistryEntry" Guid="D4ECE351-2EFE-4CB1-8714-4E98CE7F84E4">
+                <RegistryKey Root="HKLM" Key="SOFTWARE\WOW6432Node\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION">
+                    <RegistryValue Type="integer" Name="WotStat.exe" Value="11000" KeyPath="yes"/>
+                </RegistryKey>
+            </Component>
+        </DirectoryRef>
+
+        <Icon Id="wot.ico" SourceFile="Resources\wot.ico"/>
+        <Property Id="ARPPRODUCTICON" Value="wot.ico" />
+
+    </Product>
+
+    <Fragment>
+        <Directory Id="TARGETDIR" Name="SourceDir">
+            <Directory Id="ProgramFilesFolder">
+                <Directory Id="INSTALLFOLDER" Name="WoT Statistics" />
+            </Directory>
+            
+            <Directory Id="DesktopFolder" Name="Desktop">
+                <Component Id="ApplicationShortcutDesktop" Guid="*">
+                    <Shortcut Id="ApplicationDesktopShortcut"
+                        Name="Wot Statistics"
+                        Description="Wot Statistics"
+                        Target="[INSTALLFOLDER]$(var.WotStat.TargetFileName)"
+                        WorkingDirectory="INSTALLFOLDER"/>
+                    <RemoveFolder Id="DesktopFolder" On="uninstall"/>
+                    <RegistryValue
+                        Root="HKCU"
+                        Key="Software\Doctor_John\Wot Statistics"
+                        Name="installed"
+                        Type="integer"
+                        Value="1"
+                        KeyPath="yes"/>
+                </Component>
+            </Directory>
+        </Directory>
+
+        <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+        <UIRef Id="WixUI_InstallDir" />
+    </Fragment>
+
+    <Fragment>
+        <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+            <Component Id="Application">
+                <File Source="$(var.WotStat.TargetPath)" />
+            </Component>
+            <Component Id="WotStatService">
+                <File Source="$(var.WotStat.TargetDir)WotStatService.dll" />
+            </Component>
+            <Component Id="IdentityModel">
+                <File Source="$(var.WotStat.TargetDir)IdentityModel.dll" />
+            </Component>
+            <Component Id="IdentityModelOidcClient">
+                <File Source="$(var.WotStat.TargetDir)IdentityModel.OidcClient.dll" />
+            </Component>
+            <Component Id="MicrosoftBclAsyncInterfaces">
+                <File Source="$(var.WotStat.TargetDir)Microsoft.Bcl.AsyncInterfaces.dll" />
+            </Component>
+            <Component Id="MicrosoftExtensionsDependencyInjectionAbstractions">
+                <File Source="$(var.WotStat.TargetDir)Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
+            </Component>
+            <Component Id="MicrosoftExtensionsDependencyInjection">
+                <File Source="$(var.WotStat.TargetDir)Microsoft.Extensions.DependencyInjection.dll" />
+            </Component>
+            <Component Id="MicrosoftExtensionsLoggingAbstractions">
+                <File Source="$(var.WotStat.TargetDir)Microsoft.Extensions.Logging.Abstractions.dll" />
+            </Component>
+            <Component Id="MicrosoftExtensionsLogging">
+                <File Source="$(var.WotStat.TargetDir)Microsoft.Extensions.Logging.dll" />
+            </Component>
+            <Component Id="MicrosoftExtensionsOptions">
+                <File Source="$(var.WotStat.TargetDir)Microsoft.Extensions.Options.dll" />
+            </Component>
+            <Component Id="MicrosoftExtensionsPrimitives">
+                <File Source="$(var.WotStat.TargetDir)Microsoft.Extensions.Primitives.dll" />
+            </Component>
+            <Component Id="NewtonsoftJson">
+                <File Source="$(var.WotStat.TargetDir)Newtonsoft.Json.dll" />
+            </Component>
+            <Component Id="SystemBuffers">
+                <File Source="$(var.WotStat.TargetDir)System.Buffers.dll" />
+            </Component>
+            <Component Id="SystemDiagnosticsDiagnosticSource">
+                <File Source="$(var.WotStat.TargetDir)System.Diagnostics.DiagnosticSource.dll" />
+            </Component>
+            <Component Id="SystemMemory">
+                <File Source="$(var.WotStat.TargetDir)System.Memory.dll" />
+            </Component>
+            <Component Id="SystemNumericsVectors">
+                <File Source="$(var.WotStat.TargetDir)System.Numerics.Vectors.dll" />
+            </Component>
+            <Component Id="SystemRuntimeCompilerServicesUnsafe">
+                <File Source="$(var.WotStat.TargetDir)System.Runtime.CompilerServices.Unsafe.dll" />
+            </Component>
+            <Component Id="SystemTextEncodingsWeb">
+                <File Source="$(var.WotStat.TargetDir)System.Text.Encodings.Web.dll" />
+            </Component>
+            <Component Id="SystemTextJson">
+                <File Source="$(var.WotStat.TargetDir)System.Text.Json.dll" />
+            </Component>
+            <Component Id="SystemThreadingTasksExtensions">
+                <File Source="$(var.WotStat.TargetDir)System.Threading.Tasks.Extensions.dll" />
+            </Component>
+            <Component Id="SystemValueTuple">
+                <File Source="$(var.WotStat.TargetDir)System.ValueTuple.dll" />
+            </Component>
+            <Component Id="SystemWindowsControlsDataVisualizationToolkit">
+                <File Source="$(var.WotStat.TargetDir)System.Windows.Controls.DataVisualization.Toolkit.dll" />
+            </Component>
+            <Component Id="WotStatConfig">
+                <File Source="$(var.WotStat.TargetDir)WotStat.exe.config" />
+            </Component>
+            <Component Id="WotStatServiceConfig">
+                <File Source="$(var.WotStat.TargetDir)WotStatService.dll.config" />
+            </Component>
+        </ComponentGroup>
+    </Fragment>
+</Wix>

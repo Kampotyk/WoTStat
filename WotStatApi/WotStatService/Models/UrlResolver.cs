@@ -8,7 +8,9 @@
         private const string _accountListUrl = "https://api.worldoftanks.{0}/wot/account/list/";
         private const string _tanksListUrl = "https://api.worldoftanks.{0}/wot/encyclopedia/vehicles/";
         private const string _playersTanksUrl = "https://api.worldoftanks.{0}/wot/account/tanks/";
-        private const string _tanksMasteryListUrl = "https://mastery.poliroid.{0}/api/{0}/vehicles";
+        private const string _playerTanksAchievementsUrl = "https://api.worldoftanks.{0}/wot/tanks/achievements/";
+        private const string _tanksMasteryListUrl = "https://poliroid.me/mastery/api/{0}/vehicles/";
+        private const string _tanksGunMarksListUrl = "https://poliroid.me/gunmarks/api/{0}/vehicles/";
 
         public static string OpenIdLogin(Region region)
         {
@@ -34,9 +36,17 @@
         {
             return string.Format(_playersTanksUrl, region.UrlSuffix);
         }
+        public static string PlayerTanksAchievementsUrl(Region region)
+        {
+            return string.Format(_playerTanksAchievementsUrl, region.UrlSuffix);
+        }
         public static string TanksMasteryListUrl(Region region)
         {
             return string.Format(_tanksMasteryListUrl, region.UrlSuffix);
+        }
+        public static string TanksGunMarksListUrl(Region region)
+        {
+            return string.Format(_tanksGunMarksListUrl, region.UrlSuffix);
         }
     }
 }

@@ -17,7 +17,8 @@ namespace WotStat
         private ObservableCollection<TankModel> noMasterTanks;
         private TankModel selectedNoMasterTank;
 
-        private Region defaultRegion = new Region { Name = "Russia", UrlSuffix = "ru" };
+        private ObservableCollection<TankModel> gunMarksTanks;
+        private TankModel selectedGunMarksTank;
 
         public ObservableCollection<TankModel> WeakTanks
         {
@@ -65,30 +66,58 @@ namespace WotStat
             }
         }
 
+        public ObservableCollection<TankModel> GunMarksTanks
+        {
+            get => gunMarksTanks;
+            set
+            {
+                gunMarksTanks = value;
+                OnPropertyChanged("GunMarksTanks");
+            }
+        }
+
+        public TankModel SelectedGunMarksTank
+        {
+            get => selectedGunMarksTank;
+            set
+            {
+                if (selectedGunMarksTank != value)
+                {
+                    selectedGunMarksTank = value;
+                    OnPropertyChanged("SelectedGunMarksTank");
+                }
+            }
+        }
+
         public TankModel PrevSelectedWeakTank { get; set;}
 
         public TankModel PrevSelectedNoMasterTank { get; set; }
+
+        public TankModel PrevSelectedGunMarksTank { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         public async Task<bool> LoadPlayerTankStats(string playerName, PrivateData userData)
         {
-            var accountId = await Task.Factory.StartNew(() => StatService.GetAccountIdByName(playerName, defaultRegion));
+            var accountId = await Task.Factory.StartNew(() => StatService.GetAccountIdByName(playerName));
 
             Dictionary<string, bool> playerGarageTanks = null;
 
             if (userData != null && accountId.Equals(userData.AccountId))
             {
-                playerGarageTanks = await Task.Factory.StartNew(() => StatService.GetPlayerTanks(accountId, userData.AccessToken, defaultRegion));
+                playerGarageTanks = await Task.Factory.StartNew(() => StatService.GetPlayerTanks(accountId, userData.AccessToken));
             }
 
-            var allTanks = await Task.Factory.StartNew(() => StatService.GetAllTanks(defaultRegion));
-            var allTanksMastery = await Task.Factory.StartNew(() => StatService.GetAllTanksMastery(defaultRegion));
+            var allTanks = await Task.Factory.StartNew(() => StatService.GetAllTanks());
+            var allTanksMastery = await Task.Factory.StartNew(() => StatService.GetAllTanksMasteryStats());
+            var allTanksGunMarks = await Task.Factory.StartNew(() => StatService.GetAllTanksGunMarksStats());
 
-            var playerTankStats = await Task.Factory.StartNew(() => StatService.GetPlayerTankStats(accountId, allTanks, allTanksMastery, playerGarageTanks, defaultRegion));
+            var playerTanksStats = await Task.Factory.StartNew(() => StatService.GetPlayerTanksStats(accountId, allTanks, allTanksMastery, playerGarageTanks));
+            var playerTanksAchievements = await Task.Factory.StartNew(() => StatService.GetPlayerTanksAchievements(accountId, allTanks, allTanksGunMarks));
 
-            WeakTanks = new ObservableCollection<TankModel>(playerTankStats.Where(tank => tank.WinsToDesiredPercent > 0));
-            NoMasterTanks = new ObservableCollection<TankModel>(playerTankStats.Where(tank => tank.Badge != Constants.Badge.Master));
+            WeakTanks = new ObservableCollection<TankModel>(playerTanksStats.Where(tank => tank.WinsToDesiredPercent > 0));
+            NoMasterTanks = new ObservableCollection<TankModel>(playerTanksStats.Where(tank => tank.Badge != Constants.Badge.Master));
+            GunMarksTanks = new ObservableCollection<TankModel>(playerTanksAchievements.Where(tank => tank.GunMarks > 0));
 
             return true;
         }
