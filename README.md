@@ -11,3 +11,4 @@ https://www.nuget.org/packages/System.Windows.Controls.DataVisualization.Toolkit
 Execute Help\WotStatRegistryFix if Login is not working.
 
 Download:
+https://github.com/Kampotyk/WoTStat/raw/master/Download/WotStatInstaller.msi
