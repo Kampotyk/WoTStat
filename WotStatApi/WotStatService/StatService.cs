@@ -267,19 +267,22 @@ namespace WotStat
             {
                 foreach (dynamic player in result.data)
                 {
-                    foreach (dynamic tank in player.Value)
+                    if (player.Value.HasValues)
                     {
-                        if (tanks.TryGetValue(tank.tank_id.ToString(), out string tankName))
+                        foreach (dynamic tank in player.Value)
                         {
-                            var badge = tank.achievements?.markOfMastery?.Value ?? 0;
-                            var gunMarks = tank.achievements?.marksOnGun?.Value ?? 0;
+                            if (tanks.TryGetValue(tank.tank_id.ToString(), out string tankName))
+                            {
+                                var badge = tank.achievements?.markOfMastery?.Value ?? 0;
+                                var gunMarks = tank.achievements?.marksOnGun?.Value ?? 0;
 
-                            tanksGunMarksStats.TryGetValue(tank.tank_id.ToString(), out List<KeyValuePair<string, string>> tankGunMarksStats);
+                                tanksGunMarksStats.TryGetValue(tank.tank_id.ToString(), out List<KeyValuePair<string, string>> tankGunMarksStats);
 
-                            var tankModel = TankExtensions.Create(tankName, 0, 0, (Constants.Badge)badge);
-                            tankModel.GunMarks = (int)gunMarks;
-                            tankModel.GunMarksStats = tankGunMarksStats;
-                            playerTankAchievements.Add(tankModel);
+                                var tankModel = TankExtensions.Create(tankName, 0, 0, (Constants.Badge)badge);
+                                tankModel.GunMarks = (int)gunMarks;
+                                tankModel.GunMarksStats = tankGunMarksStats;
+                                playerTankAchievements.Add(tankModel);
+                            }
                         }
                     }
                 }
